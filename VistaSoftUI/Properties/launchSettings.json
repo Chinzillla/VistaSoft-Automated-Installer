@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "VistaSoftUI (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "VistaSoftUI (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
