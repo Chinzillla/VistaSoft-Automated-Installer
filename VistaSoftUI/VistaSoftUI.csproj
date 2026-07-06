@@ -15,7 +15,8 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Pages\About.xaml" />
-    <None Remove="Pages\Home.xaml" />
+    <None Remove="Pages\Install.xaml" />
+    <None Remove="Pages\Uninstall.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,12 +46,17 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Pages\About.xaml">
+    <Page Update="Pages\Install.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Pages\Home.xaml">
+    <Page Update="Pages\Uninstall.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\About.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

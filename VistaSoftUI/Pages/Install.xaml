@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="VistaSoftUI.Pages.Install"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:VistaSoftUI.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Padding="32" ColumnSpacing="24">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Left half: options file -->
+        <Grid Grid.Column="0" RowSpacing="16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock
+            Grid.Row="0"
+            Text="Configure VistaSoft Install"
+            FontSize="24"
+            FontWeight="SemiBold" />
+
+            <StackPanel Grid.Row="2" Spacing="12">
+                <Button Content="Import Options File" />
+                <Button Content="Configure Options File" />
+                
+                <Button Content="Generate Options File" />
+            </StackPanel>
+        </Grid>
+
+        <!-- Right half: installer workflow -->
+        <Grid Grid.Column="1" RowSpacing="16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock
+            Grid.Row="0"
+            Text="Run VistaSoft Installer"
+            FontSize="24"
+            FontWeight="SemiBold" />
+
+            <StackPanel Grid.Row="2" Spacing="12">
+                <Button Content="Open VistaSoft iso" />
+                <Button Content="Start Installation" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>

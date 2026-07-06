@@ -20,10 +20,10 @@
     SelectionChanged="RootNavigation_SelectionChanged">
 
         <NavigationView.MenuItems>
-            <NavigationViewItem Content="Home" Tag="home" Icon="Home" />
-            <NavigationViewItem Content="About Me" Tag="about" Icon="Contact" />
+            <NavigationViewItem Content="Install" Tag="install" Icon="Home" />
+            <NavigationViewItem Content="Uninstall" Tag="uninstall" Icon="Delete" />
+            <NavigationViewItem Content="About" Tag="about" Icon="Contact" />
         </NavigationView.MenuItems>
-
         <Frame x:Name="ContentFrame" />
     </NavigationView>
 </Window>

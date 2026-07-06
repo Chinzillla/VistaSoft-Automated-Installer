@@ -9,14 +9,14 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
 using VistaSoftUI.Pages;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
 
 namespace VistaSoftUI
 {
@@ -29,7 +29,7 @@ namespace VistaSoftUI
         {
             InitializeComponent();
 
-            ContentFrame.Navigate(typeof(Home));
+            ContentFrame.Navigate(typeof(Install), null, new SuppressNavigationTransitionInfo());
             RootNavigation.SelectedItem = RootNavigation.MenuItems[0];
         }
 
@@ -44,13 +44,17 @@ namespace VistaSoftUI
 
             string? tag = selectedItem.Tag?.ToString();
 
-            if (tag == "home")
+            if (tag == "install")
             {
-                ContentFrame.Navigate(typeof(Home));
+                ContentFrame.Navigate(typeof(Install), null, new SuppressNavigationTransitionInfo());
+            }
+            else if (tag == "uninstall")
+            {
+                ContentFrame.Navigate(typeof(Uninstall), null, new SuppressNavigationTransitionInfo());
             }
             else if (tag == "about")
             {
-                ContentFrame.Navigate(typeof(About));
+                ContentFrame.Navigate(typeof(About), null, new SuppressNavigationTransitionInfo());
             }
         }
     }
