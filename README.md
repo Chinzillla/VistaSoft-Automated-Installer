@@ -8,6 +8,13 @@ This program is meant to reduce installation time and create a standardized prot
 - Reducing tech team operational costs
 - Easier onboarding of dealer technicians and IT personnel for large volume VistaSoft installations
 
+#### Prerequisites for Dev:
+
+- Windows 11
+- [Windows App SDK 2.2.0](https://aka.ms/windowsappsdk/2.2/2.2.0/windowsappruntimeinstall-x64.exe)
+- [Visual Studio 2022](https://visualstudio.microsoft.com/vs/)
+- [WinUI3](https://learn.microsoft.com/en-us/windows/apps/get-started/start-here?tabs=wingetconfig)
+
 ## Automated workflows
 
 ### 1. Uninstallation of older software
@@ -16,31 +23,41 @@ This program is meant to reduce installation time and create a standardized prot
 - manual removal of air techniques folders
 - manual removal of visionx registries
 
-#### Approximate Time:
-- 3-4 minutes
+#### Approximate Operational Time:
+- 3-4 minutes per install
 
 #### Edge Cases/Constraints:
 - Manual Navigation
-#
+
 ### 2. Download of VistaSoft
 - Navigating to air techniques drivers page and starting installation
 
-#### Approximate Time:
-- 10-15 seconds
+#### Approximate Operational Time:
+- 10-15 seconds per install
 
 #### Edge Cases/Constraints:
 - Computer RAM free usage capacity
 - Computer Network Speed
 - Loading Air Techniques Drivers page
-#
+
 ### 3. Mounting of VistaSoft
 - Mounting vistasoft from downloads folder
 
-#### Approximate time 
-- 3-4 seconds
+#### Approximate Operational time 
+- 3-4 seconds per install
 
 #### Edge Cases/Constraints:
 - Some computers have issues using explorer.exe to mount images (very rare)
+
+### Total Time Saved
+Per Install:
+- 3-4 minutes per install
+- 10-15 seconds per install
+- 3-4 seconds per install
+
+4:19 minutes per install saved
+
+average >5 clients per install = **21 minutes** saved per install session
 
 ## VistaSoft Installer UI
 
