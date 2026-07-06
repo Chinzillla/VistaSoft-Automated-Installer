@@ -16,6 +16,8 @@ using Windows.Foundation.Collections;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
+using VistaSoftUI.Pages;
+
 namespace VistaSoftUI
 {
     /// <summary>
@@ -26,6 +28,30 @@ namespace VistaSoftUI
         public MainWindow()
         {
             InitializeComponent();
+
+            ContentFrame.Navigate(typeof(Home));
+            RootNavigation.SelectedItem = RootNavigation.MenuItems[0];
+        }
+
+        private void RootNavigation_SelectionChanged(
+            NavigationView sender,
+            NavigationViewSelectionChangedEventArgs args)
+        {
+            if (args.SelectedItem is not NavigationViewItem selectedItem)
+            {
+                return;
+            }
+
+            string? tag = selectedItem.Tag?.ToString();
+
+            if (tag == "home")
+            {
+                ContentFrame.Navigate(typeof(Home));
+            }
+            else if (tag == "about")
+            {
+                ContentFrame.Navigate(typeof(About));
+            }
         }
     }
 }
