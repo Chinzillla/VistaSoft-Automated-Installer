@@ -2,11 +2,11 @@
 
 @Author: Brandon Chin
 
-Script is meant to reduce installation time and create a standardized protocol for VistaSoft by automating all pre and post installation steps that we take internally for a complete VistaSoft installation
+This program is meant to reduce installation time and create a standardized protocol for VistaSoft by automating all pre and post installation steps that we take internally for a complete VistaSoft installation
 
 - Standardization can ensure that every PC has proper permissions in place and maintains secure
 - Reducing tech team operational costs
-- Easier onboarding of dealer technicians and it personal for large volume vistasoft installations
+- Easier onboarding of dealer technicians and IT personnel for large volume VistaSoft installations
 
 ## Automated workflows
 
@@ -42,10 +42,28 @@ Script is meant to reduce installation time and create a standardized protocol f
 #### Edge Cases/Constraints:
 - Some computers have issues using explorer.exe to mount images (very rare)
 
+## VistaSoft Installer UI
+
+Using WinUI for the frontend of the project.
+
+Purpose:
+- I want to make installs quick, intuitive, and scalable.
+- Providing anyone the ability to install VistaSoft on many machines even during rush hours without disruptions
+- Ability to setup quickly and run in the background
+
+The installer reads an .options file which can be reused on multiple machines rather than manually edited
+- You can view a sample of the options file in Docs/VistaSoft-windows-installer-4.0.12.59006-x64.exe.options
+
+### VistaSoft Installer Features
+
+In my app, you can 
+- Import an existing options file
+- Create a new options file
+- Install VistaSoft with the options file
+- Uninstall detected legacy softwares (currently only visionx 3.0.34)
+
 ## Future Features
 
-- Uninstallation support for wider variety of VisionX Softwares (3.0.33 and lower)
-- Option File creation for vistasoft
-- Installation of VistaSoft
-- Post VistaSoft installation automation scripts
-- Ability to point to a network shared folder that contains the iso instead of reinstallation
+- Uninstallation support for wider variety of VisionX, VistaEasy, and DBSWIN Softwares
+- Post VistaSoft installation automation scripts for opening ports, setting folder virus exclusions, and permissions
+- Ability to browse to an iso, otherwise to choose a version of VistaSoft to download from Air Techniques website

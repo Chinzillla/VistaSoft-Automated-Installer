@@ -1,0 +1,124 @@
+# This is the VistaSoft setup configuration file
+# This file only applies if the option "unattended" is set.
+Note: Updates within a major version (e.g. 2.3 to 2.4) are free. Updates to new major versions are subject to charge (e.g. 2.x to 3.x).
+
+# HINT: Lines starting with # are comments!
+
+# Specifies whether we are running in an unattended mode with no or minimal UI ("unattended").
+# For silent installation set this option to "unattended".
+# ATTENTION: VistaVox and ProVecta 3D Prime plugin is not available within the silent installation mode!
+#mode=unattended
+
+# The UI of the unattended mode. It is ignored if mode is not "unattended". Possible values are following:
+# "none": no user interaction is required and no output shown (this is default);
+# "minimal": no user interaction is required and a progress pop-up is displayed showing the installation progress;
+# For silent installation set this option to "none" or "minimal".
+# ATTENTION: If an error occurs the modes minimal or none, the installer will exiting directly without dialog!
+unattendedmodeui=minimal
+
+# Specifies whether the options from this file should be used for the initial setup.
+# Installation with presettings for initial setup.
+#autosetup=0
+
+# Interface for third party integration will be installed.
+# Installation with presettings for ConnectMode.
+#connectmode=0
+
+# Defines the different operation modes a workstation may use. (Only used if ConnectMode = 1 or AutoSetup = 1)
+# "local" : workstation running standalone, using only local data.
+# "client" : workstation running as client to a remote server.
+# "server" : workstation running as server.
+#operationmode=local
+
+# Remote server url if "operationmode=client"
+#hostoverride=127.0.0.1:3113
+
+# The two letter iso code of the region. (Only used if ConnectMode = 1 or AutoSetup = 1)
+#regionoverride=en
+
+# Path to use for the practice database. (Only used if ConnectMode = 1 or AutoSetup = 1)
+#databasepath=C:\VistaSoftData
+
+# Name of the practice. (Only used if AutoSetup = 1)
+#companyname=Demo Practice
+
+# Address of the practice. (Only used if AutoSetup = 1)
+#address=Demo Street 1, Demo City
+
+# Installer language code. One of this two- or five-letter code can be used:
+#
+# German: de
+# English: en
+# Spanish: es
+# French: fr
+# Italian: it
+# Japanese: ja
+# Turkish: tr
+# Russian: ru
+# Czech: cs
+# Danish: da
+# Greek: el
+# Finnish: fi
+# Korean: ko
+# Dutch: nl
+# Norwegian: no
+# Polish: pl
+# Portuguese: pt
+# Swedish: sv
+# Simplified Chinese: zh_CN
+# Traditional Chinese: zh_TW
+#
+# When commented out, the value corresponding to language of the target OS is used as default.
+# ATTENTION: if language of the target OS is not one of the languages listed above, then "en" is used as default.
+#installer-language=de
+
+# Installation of MobileConnect: "0"=no, "1"=yes.
+# When commented out, the default value is used: "0".
+# ATTENTION: MobileConnect for VistaSoft will not work any longer with DBSWIN. Please restart the computer after the installation.
+InstallMobileConnect=0
+
+# Creates a demo patient in the first practice (data is downloaded from the Internet): "0"=no, "1"=yes.
+# When commented out, the default value is used: "0".
+DemoPatient=0
+
+# Template file for the registration. The settings from the specified file are used, e.g.: RegistrationFile=C:\temp\Registration.template
+# You can export a valid registration file when setting up, on registration page
+# RegistrationFile=Registration.template
+
+# The installation directory of VistaSoft (comment out the line to use the pre-setting for the install directory).
+# Pre-setting is "C:\Program Files\Duerr\VistaSoft"
+# During an update, installation directory of the previously installed VistaSoft is always used.
+#installdir=C:\Program Files\Duerr\VistaSoft
+
+# The data directory of VistaSoft (comment out the line to use the pre-setting for the data install directory)
+# Pre-setting for the data install directory is "C:\ProgramData\Duerr\VistaSoft"
+# During an update, directory of the previously installed VistaSoft is always used.
+#DataInstalldir=C:\ProgramData\Duerr\VistaSoft
+
+# Installation of all scanner plugins (ImdaPlugin, PhoenixPlugin) : "0"=no, "1"=yes.
+# When commented out, the default value is used: "0".
+InstallAllScannerPlugins=1
+
+# Installation of the VistaScanClassic device plugin: "0"=no, "1"=VistaScan Perio USB, VistaScan Combi USB, "2"=ScanX Classic, ScanX Ortho, ScanX Intraoral, ScanX Duo.
+# When commented out, the default value is used: "0".
+InstallVistaScanClassicPlugin=0
+
+# Installation of the camera device plugin: "0"=no, "1"=yes.
+# When commented out, the default value is used: "0".
+InstallCameraPlugin=1
+
+# Installation of the VistaRay7 device and SensorX device (imda plugin): "0"=no, "1"=yes.
+# When commented out, the default value is used: "0".
+InstallVistaRay7Plugin=1
+
+# Installation of the demo device plugin: "0"=no, "1"=yes.
+# When commented out, the default value is used: "0".
+InstallDemoPlugin=0
+
+# Installation of the VistaPano device plugin: "0"=no, "1"=VistaPano S, VistaPano S Ceph, "2"=VistaPano S 2.0, VistaPano S Ceph 2.0, "3"=ProVecta S-Pan, ProVecta S-Pan Ceph.
+# When commented out, the default value is used: "0".
+InstallVistaPanoPlugin=0
+
+# Installation of the TWAIN device plugin: "0"=no, "1"=yes.
+# When commented out, the default value is used: "0".
+InstallTwainPlugin=1  
