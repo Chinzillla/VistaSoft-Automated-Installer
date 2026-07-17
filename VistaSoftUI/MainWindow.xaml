@@ -13,7 +13,17 @@
         <MicaBackdrop />
     </Window.SystemBackdrop>
 
-    <Grid>
+    <NavigationView
+    x:Name="RootNavigation"
+    PaneDisplayMode="Top"
+    IsBackButtonVisible="Collapsed"
+    SelectionChanged="RootNavigation_SelectionChanged">
 
-    </Grid>
+        <NavigationView.MenuItems>
+            <NavigationViewItem Content="Install" Tag="install" Icon="Home" />
+            <NavigationViewItem Content="Uninstall" Tag="uninstall" Icon="Delete" />
+            <NavigationViewItem Content="Info" Tag="info" Icon="Help" />
+        </NavigationView.MenuItems>
+        <Frame x:Name="ContentFrame" />
+    </NavigationView>
 </Window>
