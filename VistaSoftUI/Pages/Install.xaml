@@ -8,52 +8,122 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Padding="32" ColumnSpacing="24">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+    <ScrollViewer
+        VerticalScrollBarVisibility="Auto"
+        HorizontalScrollBarVisibility="Disabled">
+        
+        <Grid Padding="32" ColumnSpacing="24">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            
+            <!-- Left half -->
+            <Grid Grid.Column="0" RowSpacing="16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-        <!-- Left half: options file -->
-        <Grid Grid.Column="0" RowSpacing="16">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+                <!-- Title -->
+                <TextBlock
+                Grid.Row="0"
+                Text="Options"
+                FontSize="24"
+                FontWeight="SemiBold" />
 
-            <TextBlock
-            Grid.Row="0"
-            Text="Configure VistaSoft Install"
-            FontSize="24"
-            FontWeight="SemiBold" />
+                <!-- Content -->
+                <StackPanel Grid.Row="2" Spacing="12">
+                    <Button Content="Import Options" />
+                    <CheckBox x:Name="ConnectModeCheckBox" Content="VistaSoft Connect" />
+                    <TextBlock Text="Installation Type" />
+                    <RadioButton
+                            x:Name="LocalRadioButton"
+                            Content="Local"
+                            GroupName="InstallType"
+                            IsChecked="True"/>
+                    <RadioButton
+                            x:Name="ClientRadioButton"
+                            Content="Client"
+                            GroupName="InstallType"/>
+                    <RadioButton
+                            x:Name="ServerRadioButton"
+                            Content="Server"
+                            GroupName="InstallType"/>
+                    <TextBox
+                        x:Name="ServerHostTextBox"
+                        Header="Server Host Name"
+                        IsEnabled="False"
+                        PlaceholderText="example-server:3113" />
+                    <Grid ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Row="2" Spacing="12">
-                <Button Content="Import Options File" />
-                <Button Content="Configure Options File" />
-                
-                <Button Content="Generate Options File" />
-            </StackPanel>
+                        <TextBox
+                            x:Name="DatabasePathTextBox"
+                            Grid.Column="0"
+                            Header="Database Path"
+                            PlaceholderText="C:\VistaSoftData" />
+                        <Button
+                            Grid.Column="1"
+                            Content="Browse"
+                            VerticalAlignment="Bottom" />
+                    </Grid>
+                    <TextBox x:Name="PracticeNameTextBox" Header="Practice Name" />
+
+                    <TextBox x:Name="StreetTextBox" Header="Street" />
+
+                    <Grid ColumnSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox x:Name="CityTextBox" Grid.Column="0" Header="City" />
+                        <TextBox x:Name="StateTextBox" Grid.Column="1" Header="State / Province" />
+                        <TextBox x:Name="ZipTextBox" Grid.Column="2" Header="Zip / Postal Code" />
+                    </Grid>
+
+                    <ComboBox x:Name="CountryComboBox" Header="Country" Width="220" SelectedIndex="0">
+                        <ComboBoxItem Content="United States" />
+                        <ComboBoxItem Content="Canada" />
+                    </ComboBox>
+                    <TextBlock
+                        Text="Devices"
+                        FontWeight="SemiBold" />
+                    <CheckBox x:Name="ScanXCheckBox" Content="ScanX" />
+                    <CheckBox x:Name="ScanXClassicCheckBox" Content="ScanX Classic" />
+                    <CheckBox x:Name="CamXCheckBox" Content="CamX" />
+                    <CheckBox x:Name="SensorXCheckBox" Content="SensorX" />
+                    <CheckBox x:Name="TwainCheckBox" Content="Twain" />
+                    <Button Content="Export Options" />
+                </StackPanel>
+            </Grid>
+
+            <!-- Right half -->
+            <Grid Grid.Column="1" RowSpacing="16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock
+                Grid.Row="0"
+                Text="Install VistaSoft"
+                FontSize="24"
+                FontWeight="SemiBold" />
+
+                <StackPanel Grid.Row="2" Spacing="12">
+                    <Button Content="Open VistaSoft iso" />
+                    <Button Content="Install" />
+                </StackPanel>
+            </Grid>
+            
         </Grid>
-
-        <!-- Right half: installer workflow -->
-        <Grid Grid.Column="1" RowSpacing="16">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-            <TextBlock
-            Grid.Row="0"
-            Text="Run VistaSoft Installer"
-            FontSize="24"
-            FontWeight="SemiBold" />
-
-            <StackPanel Grid.Row="2" Spacing="12">
-                <Button Content="Open VistaSoft iso" />
-                <Button Content="Start Installation" />
-            </StackPanel>
-        </Grid>
-    </Grid>
+    </ScrollViewer>
 </Page>
