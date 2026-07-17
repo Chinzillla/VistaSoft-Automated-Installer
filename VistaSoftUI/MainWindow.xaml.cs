@@ -52,9 +52,9 @@ namespace VistaSoftUI
             {
                 ContentFrame.Navigate(typeof(Uninstall), null, new SuppressNavigationTransitionInfo());
             }
-            else if (tag == "about")
+            else if (tag == "info")
             {
-                ContentFrame.Navigate(typeof(About), null, new SuppressNavigationTransitionInfo());
+                ContentFrame.Navigate(typeof(Info), null, new SuppressNavigationTransitionInfo());
             }
         }
     }
