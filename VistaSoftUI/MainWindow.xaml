@@ -1,28 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Window
     x:Class="VistaSoftUI.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:VistaSoftUI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:VistaSoftUI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Title="VistaSoftUI">
+    Title="VistaSoftUI"
+    mc:Ignorable="d">
 
     <Window.SystemBackdrop>
         <MicaBackdrop />
     </Window.SystemBackdrop>
 
     <NavigationView
-    x:Name="RootNavigation"
-    PaneDisplayMode="Top"
-    IsBackButtonVisible="Collapsed"
-    SelectionChanged="RootNavigation_SelectionChanged">
+        x:Name="RootNavigation"
+        IsBackButtonVisible="Collapsed"
+        PaneDisplayMode="Top"
+        SelectionChanged="RootNavigation_SelectionChanged">
 
         <NavigationView.MenuItems>
-            <NavigationViewItem Content="Install" Tag="install" Icon="Home" />
-            <NavigationViewItem Content="Uninstall" Tag="uninstall" Icon="Delete" />
-            <NavigationViewItem Content="Info" Tag="info" Icon="Help" />
+            <NavigationViewItem
+                Content="Install"
+                Icon="Home"
+                Tag="install" />
+            <NavigationViewItem
+                Content="Uninstall"
+                Icon="Delete"
+                Tag="uninstall" />
+            <NavigationViewItem
+                Content="Info"
+                Icon="Help"
+                Tag="info" />
         </NavigationView.MenuItems>
         <Frame x:Name="ContentFrame" />
     </NavigationView>
