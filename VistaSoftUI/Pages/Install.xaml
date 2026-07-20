@@ -55,23 +55,6 @@
                         Content="Server"
                         GroupName="InstallType" />
 
-                    <Grid ColumnSpacing="8">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <TextBox
-                            x:Name="DatabasePathTextBox"
-                            Grid.Column="0"
-                            Header="Database Path"
-                            PlaceholderText="C:\VistaSoftData" />
-                        <Button
-                            Grid.Column="1"
-                            VerticalAlignment="Bottom"
-                            Content="Browse" />
-                    </Grid>
-
                     <TextBox x:Name="PracticeNameTextBox" Header="Practice Name" />
                     <TextBox x:Name="StreetTextBox" Header="Street" />
 
@@ -111,7 +94,10 @@
                     <CheckBox x:Name="CamXCheckBox" Content="CamX" />
                     <CheckBox x:Name="SensorXCheckBox" Content="SensorX" />
                     <CheckBox x:Name="TwainCheckBox" Content="Twain" />
-                    <Button Content="Export Options" />
+                    <Button
+                        x:Name="ExportOptionsButton"
+                        Click="ExportOptionsButton_Click"
+                        Content="Export Options" />
                 </StackPanel>
             </ScrollViewer>
         </Grid>

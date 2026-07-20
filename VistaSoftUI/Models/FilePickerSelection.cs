@@ -11,7 +11,8 @@ namespace VistaSoftUI.Models
             string[] fileTypes,
             string buttonText,
             string? fileTypeLabel = null,
-            PickerLocationId suggestedStartLocation = PickerLocationId.DocumentsLibrary)
+            PickerLocationId suggestedStartLocation = PickerLocationId.DocumentsLibrary,
+            string? suggestedFileName = null)
         {
             ArgumentNullException.ThrowIfNull(fileTypes);
             ArgumentException.ThrowIfNullOrWhiteSpace(buttonText);
@@ -31,12 +32,15 @@ namespace VistaSoftUI.Models
                 ? CreateDefaultFileTypeLabel(FileTypes)
                 : fileTypeLabel;
             SuggestedStartLocation = suggestedStartLocation;
+            SuggestedFileName = suggestedFileName;
         }
 
         public IReadOnlyList<string> FileTypes { get; }
         public string ButtonText { get; }
         public string FileTypeLabel { get; }
         public PickerLocationId SuggestedStartLocation { get; }
+        public string? SuggestedFileName { get; }
+        public string? DefaultFileExtension => FileTypes.FirstOrDefault(fileType => fileType != "*");
 
         private static string NormalizeFileType(string fileType)
         {
@@ -47,6 +51,11 @@ namespace VistaSoftUI.Models
             if (trimmedFileType == "*")
             {
                 return trimmedFileType;
+            }
+
+            if (trimmedFileType.StartsWith("*."))
+            {
+                return trimmedFileType[1..];
             }
 
             return trimmedFileType.StartsWith('.')
