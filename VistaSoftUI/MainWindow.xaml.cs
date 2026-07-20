@@ -44,6 +44,10 @@ namespace VistaSoftUI
             {
                 ContentFrame.Navigate(typeof(Info), null, new SuppressNavigationTransitionInfo());
             }
+            else if (tag == "dbcopy")
+            {
+                ContentFrame.Navigate(typeof(Dbcopy), null, new SuppressNavigationTransitionInfo());
+            }
         }
     }
 }

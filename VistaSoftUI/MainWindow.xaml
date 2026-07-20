@@ -29,6 +29,10 @@
                 Icon="Delete"
                 Tag="uninstall" />
             <NavigationViewItem
+                Content="DB Copy"
+                Icon="Copy"
+                Tag="dbcopy" />
+            <NavigationViewItem
                 Content="Info"
                 Icon="Help"
                 Tag="info" />

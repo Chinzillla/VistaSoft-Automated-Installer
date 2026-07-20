@@ -14,6 +14,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Pages\Dbcopy.xaml" />
     <None Remove="Pages\Info.xaml" />
     <None Remove="Pages\Install.xaml" />
     <None Remove="Pages\Uninstall.xaml" />
@@ -46,6 +47,11 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Pages\Dbcopy.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Pages\Info.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -59,10 +65,6 @@
     <Page Update="Pages\Uninstall.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
   <!--
