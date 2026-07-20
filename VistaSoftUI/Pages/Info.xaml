@@ -6,7 +6,99 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:VistaSoftUI.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:VistaSoftUI.Models"
     mc:Ignorable="d">
 
-    <Grid />
+    <Grid Padding="32" ColumnSpacing="24">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0" Spacing="20">
+            <TextBlock FontSize="22" Text="Program Details" />
+
+            <StackPanel Spacing="4">
+                <TextBlock
+                    FontSize="18"
+                    FontWeight="SemiBold"
+                    Text="Author:" />
+                <TextBlock FontSize="16" Text="Brandon Chin" />
+            </StackPanel>
+
+            <StackPanel Spacing="4">
+                <TextBlock
+                    FontSize="18"
+                    FontWeight="SemiBold"
+                    Text="Version:" />
+                <TextBlock FontSize="16" Text="0.0.1a" />
+            </StackPanel>
+
+            <StackPanel Spacing="4">
+                <TextBlock
+                    FontSize="18"
+                    FontWeight="SemiBold"
+                    Text="Version Date:" />
+                <TextBlock FontSize="16" Text="07/20/2026" />
+            </StackPanel>
+
+            <StackPanel Spacing="4">
+                <TextBlock
+                    FontSize="18"
+                    FontWeight="SemiBold"
+                    Text="Source Code:" />
+                <TextBlock FontSize="16" TextWrapping="Wrap">
+                    <Hyperlink NavigateUri="https://github.com/Chinzillla/VistaSoft-Automated-Installer">Github.com/Chinzillla/VistaSoft-Automated-Installer</Hyperlink>
+                </TextBlock>
+            </StackPanel>
+        </StackPanel>
+
+        <Grid Grid.Column="1" RowSpacing="12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock
+                Grid.Row="0"
+                FontSize="22"
+                Text="Changelog" />
+
+            <ScrollViewer
+                Grid.Row="1"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{x:Bind ChangelogEntries}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="models:ChangelogEntry">
+                            <StackPanel Margin="0,0,0,16" Spacing="16">
+                                <Line
+                                    Stroke="Black"
+                                    StrokeThickness="1"
+                                    X1="0"
+                                    X2="400"
+                                    Y1="0"
+                                    Y2="0" />
+                                <TextBlock
+                                    FontSize="18"
+                                    FontWeight="SemiBold"
+                                    Text="{x:Bind VersionLabel}" />
+                                <TextBlock FontSize="16" Text="{x:Bind DateLabel}" />
+                                <ItemsControl ItemsSource="{x:Bind Changes}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock FontSize="16" TextWrapping="Wrap">
+                                                <Run Text="- " />
+                                                <Run Text="{Binding}" />
+                                            </TextBlock>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
 </Page>
