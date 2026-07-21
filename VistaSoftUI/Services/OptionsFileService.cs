@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using VistaSoftUI.Models;
 
@@ -11,12 +10,10 @@ namespace VistaSoftUI.Services
 {
     public static class OptionsFileService
     {
-        private static readonly Regex PostalCodeSuffixRegex = new(
-            @"^(?<state>.+?)\s+(?<zip>(?:\d{5}(?:-\d{4})?)|(?:[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d))$",
-            RegexOptions.Compiled);
-
         private static readonly IReadOnlyList<string> ExportKeyOrder =
         [
+            OptionsFileKeys.Mode,
+            OptionsFileKeys.UnattendedModeUi,
             OptionsFileKeys.AutoSetup,
             OptionsFileKeys.ConnectMode,
             OptionsFileKeys.OperationMode,
@@ -104,7 +101,7 @@ namespace VistaSoftUI.Services
             }
             else if (StringEquals(key, OptionsFileKeys.Address))
             {
-                ApplyAddress(options, value);
+                options.PracticeAddress = value;
             }
             else if (StringEquals(key, OptionsFileKeys.InstallAllScannerPlugins))
             {
@@ -132,11 +129,13 @@ namespace VistaSoftUI.Services
         {
             return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
+                [OptionsFileKeys.Mode] = OptionsFileValues.Unattended,
+                [OptionsFileKeys.UnattendedModeUi] = OptionsFileValues.None,
                 [OptionsFileKeys.AutoSetup] = ToInstallerBoolean(options.AutoSetup ?? true),
                 [OptionsFileKeys.ConnectMode] = ToInstallerBoolean(options.ConnectMode),
                 [OptionsFileKeys.OperationMode] = VistaSoftOperationModes.NormalizeOrDefault(options.OperationMode),
                 [OptionsFileKeys.CompanyName] = options.PracticeName ?? string.Empty,
-                [OptionsFileKeys.Address] = FormatAddress(options),
+                [OptionsFileKeys.Address] = FlattenMultilineValue(options.PracticeAddress),
                 [OptionsFileKeys.InstallAllScannerPlugins] = ToInstallerBoolean(options.InstallScanXPlugin),
                 [OptionsFileKeys.InstallVistaScanClassicPlugin] = options.InstallScanXClassicPlugin == true ? "2" : "0",
                 [OptionsFileKeys.InstallCameraPlugin] = ToInstallerBoolean(options.InstallCamXPlugin),
@@ -175,76 +174,16 @@ namespace VistaSoftUI.Services
             return !string.IsNullOrWhiteSpace(key);
         }
 
-        private static void ApplyAddress(VistaSoftInstallOptions options, string address)
+        private static string FlattenMultilineValue(string? value)
         {
-            options.Street = string.Empty;
-            options.City = string.Empty;
-            options.State = string.Empty;
-            options.Zip = string.Empty;
-            options.Country = string.Empty;
-
-            if (string.IsNullOrWhiteSpace(address))
+            if (string.IsNullOrWhiteSpace(value))
             {
-                return;
+                return string.Empty;
             }
-
-            string[] parts = address
-                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-
-            if (parts.Length == 0)
-            {
-                options.Street = address.Trim();
-                return;
-            }
-
-            options.Street = parts[0];
-
-            if (parts.Length >= 2)
-            {
-                options.City = parts[1];
-            }
-
-            if (parts.Length >= 3)
-            {
-                (options.State, options.Zip) = SplitStateAndZip(parts[2]);
-            }
-
-            if (parts.Length >= 4)
-            {
-                options.Country = string.Join(", ", parts.Skip(3));
-            }
-        }
-
-        private static (string State, string Zip) SplitStateAndZip(string value)
-        {
-            string trimmedValue = value.Trim();
-
-            if (trimmedValue.Length == 0)
-            {
-                return (string.Empty, string.Empty);
-            }
-
-            Match match = PostalCodeSuffixRegex.Match(trimmedValue);
-
-            if (!match.Success)
-            {
-                return (trimmedValue, string.Empty);
-            }
-
-            return (
-                match.Groups["state"].Value.Trim(),
-                match.Groups["zip"].Value.Trim());
-        }
-
-        private static string FormatAddress(VistaSoftInstallOptions options)
-        {
-            string stateAndZip = string.Join(
-                " ",
-                new[] { options.State, options.Zip }.Where(HasValue));
 
             return string.Join(
-                ", ",
-                new[] { options.Street, options.City, stateAndZip, options.Country }.Where(HasValue));
+                " ",
+                value.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
         }
 
         private static bool? ParseBoolean(string value)
@@ -274,13 +213,10 @@ namespace VistaSoftUI.Services
             return string.Equals(left, right, StringComparison.OrdinalIgnoreCase);
         }
 
-        private static bool HasValue(string? value)
-        {
-            return !string.IsNullOrWhiteSpace(value);
-        }
-
         private static class OptionsFileKeys
         {
+            public const string Mode = "mode";
+            public const string UnattendedModeUi = "unattendedmodeui";
             public const string AutoSetup = "autosetup";
             public const string ConnectMode = "connectmode";
             public const string OperationMode = "operationmode";
@@ -291,6 +227,12 @@ namespace VistaSoftUI.Services
             public const string InstallCameraPlugin = "InstallCameraPlugin";
             public const string InstallVistaRay7Plugin = "InstallVistaRay7Plugin";
             public const string InstallTwainPlugin = "InstallTwainPlugin";
+        }
+
+        private static class OptionsFileValues
+        {
+            public const string Unattended = "unattended";
+            public const string None = "none";
         }
     }
 }

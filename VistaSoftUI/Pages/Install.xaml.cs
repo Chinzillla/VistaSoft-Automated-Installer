@@ -121,11 +121,7 @@ namespace VistaSoftUI.Pages
                 ConnectMode = ConnectModeCheckBox.IsChecked == true,
                 OperationMode = GetSelectedOperationMode(),
                 PracticeName = PracticeNameTextBox.Text,
-                Street = StreetTextBox.Text,
-                City = CityTextBox.Text,
-                State = StateTextBox.Text,
-                Zip = ZipTextBox.Text,
-                Country = GetSelectedCountry(),
+                PracticeAddress = PracticeAddressTextBox.Text,
                 InstallScanXPlugin = ScanXCheckBox.IsChecked == true,
                 InstallScanXClassicPlugin = ScanXClassicCheckBox.IsChecked == true,
                 InstallCamXPlugin = CamXCheckBox.IsChecked == true,
@@ -153,29 +149,9 @@ namespace VistaSoftUI.Pages
                 PracticeNameTextBox.Text = options.PracticeName;
             }
 
-            if (options.Street is not null)
+            if (options.PracticeAddress is not null)
             {
-                StreetTextBox.Text = options.Street;
-            }
-
-            if (options.City is not null)
-            {
-                CityTextBox.Text = options.City;
-            }
-
-            if (options.State is not null)
-            {
-                StateTextBox.Text = options.State;
-            }
-
-            if (options.Zip is not null)
-            {
-                ZipTextBox.Text = options.Zip;
-            }
-
-            if (!string.IsNullOrWhiteSpace(options.Country))
-            {
-                SetSelectedCountry(options.Country);
+                PracticeAddressTextBox.Text = options.PracticeAddress;
             }
 
             if (options.InstallScanXPlugin.HasValue)
@@ -226,29 +202,6 @@ namespace VistaSoftUI.Pages
             LocalRadioButton.IsChecked = normalizedOperationMode == VistaSoftOperationModes.Local;
             ClientRadioButton.IsChecked = normalizedOperationMode == VistaSoftOperationModes.Client;
             ServerRadioButton.IsChecked = normalizedOperationMode == VistaSoftOperationModes.Server;
-        }
-
-        private string? GetSelectedCountry()
-        {
-            return CountryComboBox.SelectedItem is ComboBoxItem selectedItem
-                ? selectedItem.Content?.ToString()
-                : null;
-        }
-
-        private void SetSelectedCountry(string country)
-        {
-            foreach (object item in CountryComboBox.Items)
-            {
-                if (item is ComboBoxItem comboBoxItem
-                    && string.Equals(
-                        comboBoxItem.Content?.ToString(),
-                        country,
-                        StringComparison.OrdinalIgnoreCase))
-                {
-                    CountryComboBox.SelectedItem = comboBoxItem;
-                    return;
-                }
-            }
         }
     }
 }
