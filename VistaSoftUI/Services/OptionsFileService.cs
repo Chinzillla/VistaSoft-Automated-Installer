@@ -10,29 +10,6 @@ namespace VistaSoftUI.Services
 {
     public static class OptionsFileService
     {
-        private static readonly IReadOnlyList<string> ExportKeyOrder =
-        [
-            OptionsFileKeys.Mode,
-            OptionsFileKeys.UnattendedModeUi,
-            OptionsFileKeys.AutoSetup,
-            OptionsFileKeys.ConnectMode,
-            OptionsFileKeys.OperationMode,
-            OptionsFileKeys.CompanyName,
-            OptionsFileKeys.Address,
-            OptionsFileKeys.InstallAllScannerPlugins,
-            OptionsFileKeys.InstallVistaScanClassicPlugin,
-            OptionsFileKeys.InstallCameraPlugin,
-            OptionsFileKeys.InstallVistaRay7Plugin,
-            OptionsFileKeys.InstallTwainPlugin,
-        ];
-
-        private static readonly IReadOnlySet<string> OptionalStringKeys = new HashSet<string>(
-            [
-                OptionsFileKeys.CompanyName,
-                OptionsFileKeys.Address,
-            ],
-            StringComparer.OrdinalIgnoreCase);
-
         public static async Task<VistaSoftInstallOptions> ReadAsync(string filePath)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(filePath);
@@ -56,10 +33,9 @@ namespace VistaSoftUI.Services
         {
             ArgumentNullException.ThrowIfNull(options);
 
-            Dictionary<string, string> optionValues = CreateSupportedOptionValues(options);
-            IEnumerable<string> lines = ExportKeyOrder
-                .Where(key => ShouldExportOption(key, optionValues[key]))
-                .Select(key => $"{key}={optionValues[key]}");
+            IEnumerable<string> lines = CreateSupportedOptionValues(options)
+                .Where(option => option.IsRequired || !string.IsNullOrWhiteSpace(option.Value))
+                .Select(option => $"{option.Key}={option.Value}");
 
             return string.Join(Environment.NewLine, lines) + Environment.NewLine;
         }
@@ -125,28 +101,24 @@ namespace VistaSoftUI.Services
             }
         }
 
-        private static Dictionary<string, string> CreateSupportedOptionValues(VistaSoftInstallOptions options)
+        private static (string Key, string Value, bool IsRequired)[] CreateSupportedOptionValues(
+            VistaSoftInstallOptions options)
         {
-            return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-            {
-                [OptionsFileKeys.Mode] = OptionsFileValues.Unattended,
-                [OptionsFileKeys.UnattendedModeUi] = OptionsFileValues.None,
-                [OptionsFileKeys.AutoSetup] = ToInstallerBoolean(options.AutoSetup ?? true),
-                [OptionsFileKeys.ConnectMode] = ToInstallerBoolean(options.ConnectMode),
-                [OptionsFileKeys.OperationMode] = VistaSoftOperationModes.NormalizeOrDefault(options.OperationMode),
-                [OptionsFileKeys.CompanyName] = options.PracticeName ?? string.Empty,
-                [OptionsFileKeys.Address] = FlattenMultilineValue(options.PracticeAddress),
-                [OptionsFileKeys.InstallAllScannerPlugins] = ToInstallerBoolean(options.InstallScanXPlugin),
-                [OptionsFileKeys.InstallVistaScanClassicPlugin] = options.InstallScanXClassicPlugin == true ? "2" : "0",
-                [OptionsFileKeys.InstallCameraPlugin] = ToInstallerBoolean(options.InstallCamXPlugin),
-                [OptionsFileKeys.InstallVistaRay7Plugin] = ToInstallerBoolean(options.InstallSensorXPlugin),
-                [OptionsFileKeys.InstallTwainPlugin] = ToInstallerBoolean(options.InstallTwainPlugin),
-            };
-        }
-
-        private static bool ShouldExportOption(string key, string value)
-        {
-            return !OptionalStringKeys.Contains(key) || !string.IsNullOrWhiteSpace(value);
+            return
+            [
+                (OptionsFileKeys.Mode, OptionsFileValues.Unattended, true),
+                (OptionsFileKeys.UnattendedModeUi, OptionsFileValues.None, true),
+                (OptionsFileKeys.AutoSetup, ToInstallerBoolean(options.AutoSetup ?? true), true),
+                (OptionsFileKeys.ConnectMode, ToInstallerBoolean(options.ConnectMode), true),
+                (OptionsFileKeys.OperationMode, VistaSoftOperationModes.NormalizeOrDefault(options.OperationMode), true),
+                (OptionsFileKeys.CompanyName, options.PracticeName ?? string.Empty, false),
+                (OptionsFileKeys.Address, FlattenMultilineValue(options.PracticeAddress), false),
+                (OptionsFileKeys.InstallAllScannerPlugins, ToInstallerBoolean(options.InstallScanXPlugin), true),
+                (OptionsFileKeys.InstallVistaScanClassicPlugin, options.InstallScanXClassicPlugin == true ? "2" : "0", true),
+                (OptionsFileKeys.InstallCameraPlugin, ToInstallerBoolean(options.InstallCamXPlugin), true),
+                (OptionsFileKeys.InstallVistaRay7Plugin, ToInstallerBoolean(options.InstallSensorXPlugin), true),
+                (OptionsFileKeys.InstallTwainPlugin, ToInstallerBoolean(options.InstallTwainPlugin), true),
+            ];
         }
 
         private static bool TryParseOptionLine(string line, out string key, out string value)

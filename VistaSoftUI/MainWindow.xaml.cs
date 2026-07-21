@@ -1,16 +1,11 @@
+using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 using VistaSoftUI.Pages;
 
 namespace VistaSoftUI
 {
-    /// <summary>
-    /// An empty window that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class MainWindow : Window
     {
         public MainWindow()
@@ -31,23 +26,21 @@ namespace VistaSoftUI
             }
 
             string? tag = selectedItem.Tag?.ToString();
+            Type? pageType = tag switch
+            {
+                "install" => typeof(Install),
+                "uninstall" => typeof(Uninstall),
+                "info" => typeof(Info),
+                "dbcopy" => typeof(Dbcopy),
+                _ => null,
+            };
 
-            if (tag == "install")
+            if (pageType is null)
             {
-                ContentFrame.Navigate(typeof(Install), null, new SuppressNavigationTransitionInfo());
+                return;
             }
-            else if (tag == "uninstall")
-            {
-                ContentFrame.Navigate(typeof(Uninstall), null, new SuppressNavigationTransitionInfo());
-            }
-            else if (tag == "info")
-            {
-                ContentFrame.Navigate(typeof(Info), null, new SuppressNavigationTransitionInfo());
-            }
-            else if (tag == "dbcopy")
-            {
-                ContentFrame.Navigate(typeof(Dbcopy), null, new SuppressNavigationTransitionInfo());
-            }
+
+            ContentFrame.Navigate(pageType, null, new SuppressNavigationTransitionInfo());
         }
     }
 }

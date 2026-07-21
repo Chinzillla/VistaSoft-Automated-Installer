@@ -1,22 +1,20 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using VistaSoftUI.Models;
 using VistaSoftUI.Services;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 namespace VistaSoftUI.Pages
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class Install : Page
     {
+        private const string InstallWorkflowScriptName = "install_vistasoft_workflow.bat";
+        private const string OptionsContentEnvironmentVariable = "VISTASOFT_OPTIONS_CONTENT_BASE64";
+
         private static readonly FilePickerSelection OptionsFilePicker = new(
             [".options"],
             "Import Options",
@@ -134,17 +132,20 @@ namespace VistaSoftUI.Pages
             }
 
             InstallButton.IsEnabled = false;
-            InstallStatusTextBlock.Text = "Mounting selected VistaSoft ISO...";
+            InstallStatusTextBlock.Text = "Running VistaSoft install workflow...";
 
             try
             {
-                string scriptPath = Path.Combine(AppContext.BaseDirectory, "Scripts", "mount_vistasoft.bat");
+                string scriptPath = Path.Combine(AppContext.BaseDirectory, "Scripts", InstallWorkflowScriptName);
 
                 if (!File.Exists(scriptPath))
                 {
-                    InstallStatusTextBlock.Text = $"Mount script not found: {scriptPath}";
+                    InstallStatusTextBlock.Text = $"Install workflow script not found: {scriptPath}";
                     return;
                 }
+
+                VistaSoftInstallOptions options = ReadOptionsFromForm();
+                string optionsContent = OptionsFileService.CreateFileContent(options);
 
                 ProcessStartInfo startInfo = new()
                 {
@@ -155,6 +156,8 @@ namespace VistaSoftUI.Pages
                     CreateNoWindow = true,
                 };
 
+                startInfo.Environment[OptionsContentEnvironmentVariable] =
+                    Convert.ToBase64String(Encoding.UTF8.GetBytes(optionsContent));
                 startInfo.ArgumentList.Add("/d");
                 startInfo.ArgumentList.Add("/c");
                 startInfo.ArgumentList.Add(scriptPath);
@@ -164,22 +167,29 @@ namespace VistaSoftUI.Pages
 
                 if (process is null)
                 {
-                    InstallStatusTextBlock.Text = "Unable to start the mount script.";
+                    InstallStatusTextBlock.Text = "Unable to start the install workflow script.";
                     return;
                 }
 
-                string output = await process.StandardOutput.ReadToEndAsync();
-                string error = await process.StandardError.ReadToEndAsync();
+                Task<string> outputTask = process.StandardOutput.ReadToEndAsync();
+                Task<string> errorTask = process.StandardError.ReadToEndAsync();
 
                 await process.WaitForExitAsync();
 
-                InstallStatusTextBlock.Text = process.ExitCode == 0
-                    ? $"ISO mounted successfully.{Environment.NewLine}{output.Trim()}"
-                    : $"Unable to mount ISO. Exit code: {process.ExitCode}{Environment.NewLine}{output.Trim()}{Environment.NewLine}{error.Trim()}";
+                string output = await outputTask;
+                string error = await errorTask;
+
+                if (process.ExitCode != 0)
+                {
+                    InstallStatusTextBlock.Text = $"Install workflow failed. Exit code: {process.ExitCode}{Environment.NewLine}{output.Trim()}{Environment.NewLine}{error.Trim()}";
+                    return;
+                }
+
+                InstallStatusTextBlock.Text = $"Install workflow completed successfully.{Environment.NewLine}{output.Trim()}";
             }
             catch (Exception ex)
             {
-                InstallStatusTextBlock.Text = $"Unable to mount ISO: {ex.Message}";
+                InstallStatusTextBlock.Text = $"Unable to run install workflow: {ex.Message}";
             }
             finally
             {
