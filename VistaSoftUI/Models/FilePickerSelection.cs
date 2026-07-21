@@ -17,10 +17,9 @@ namespace VistaSoftUI.Models
             ArgumentNullException.ThrowIfNull(fileTypes);
             ArgumentException.ThrowIfNullOrWhiteSpace(buttonText);
 
-            FileTypes = fileTypes
+            FileTypes = [.. fileTypes
                 .Select(NormalizeFileType)
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToArray();
+                .Distinct(StringComparer.OrdinalIgnoreCase)];
 
             if (FileTypes.Count == 0)
             {
