@@ -34,6 +34,8 @@ namespace VistaSoftUI.Pages
                 ]),
         ];
 
+        public ChangelogEntry LatestChangelogEntry => ChangelogEntries[0];
+
         public Info()
         {
             InitializeComponent();

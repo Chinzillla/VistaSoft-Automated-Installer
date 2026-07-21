@@ -31,7 +31,7 @@
                     FontSize="18"
                     FontWeight="SemiBold"
                     Text="Version:" />
-                <TextBlock FontSize="16" Text="0.0.1a" />
+                <TextBlock FontSize="16" Text="{x:Bind LatestChangelogEntry.Version}" />
             </StackPanel>
 
             <StackPanel Spacing="4">
@@ -39,7 +39,7 @@
                     FontSize="18"
                     FontWeight="SemiBold"
                     Text="Version Date:" />
-                <TextBlock FontSize="16" Text="07/20/2026" />
+                <TextBlock FontSize="16" Text="{x:Bind LatestChangelogEntry.ReleaseDate}" />
             </StackPanel>
 
             <StackPanel Spacing="4">

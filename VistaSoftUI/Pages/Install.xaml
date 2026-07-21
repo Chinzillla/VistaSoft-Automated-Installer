@@ -17,6 +17,7 @@
         <Grid Grid.Column="0" RowSpacing="16">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
@@ -26,8 +27,18 @@
                 FontWeight="SemiBold"
                 Text="Options" />
 
-            <ScrollViewer
+            <TextBlock
                 Grid.Row="1"
+                FontSize="16"
+                TextWrapping="Wrap">
+                Use Case:<LineBreak />
+                - Import existing options files for VistaSoft Install<LineBreak />
+                - Configure options for VistaSoft Install<LineBreak />
+                - Export for VistaSoft Install on another computer</TextBlock>
+
+
+            <ScrollViewer
+                Grid.Row="2"
                 HorizontalScrollBarVisibility="Disabled"
                 VerticalScrollBarVisibility="Auto">
                 <StackPanel Margin="0,0,16,0" Spacing="16">
@@ -39,8 +50,20 @@
                         x:Name="SelectedOptionsFileTextBlock"
                         Text="No options file selected."
                         TextWrapping="Wrap" />
+                    <Line
+                        Stroke="Black"
+                        StrokeThickness="1"
+                        X1="0"
+                        X2="400"
+                        Y1="0"
+                        Y2="0" />
                     <CheckBox x:Name="ConnectModeCheckBox" Content="VistaSoft Connect" />
                     <TextBlock Text="Installation Type" />
+                    <TextBlock
+                        FontSize="12"
+                        FontStyle="Italic"
+                        Text="For Client you will need to enter server hostname after install"
+                        TextWrapping="Wrap" />
                     <RadioButton
                         x:Name="LocalRadioButton"
                         Content="Local"
@@ -54,64 +77,51 @@
                         x:Name="ServerRadioButton"
                         Content="Server"
                         GroupName="InstallType" />
-
-                    <Grid ColumnSpacing="8">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <TextBox
-                            x:Name="DatabasePathTextBox"
-                            Grid.Column="0"
-                            Header="Database Path"
-                            PlaceholderText="C:\VistaSoftData" />
-                        <Button
-                            Grid.Column="1"
-                            VerticalAlignment="Bottom"
-                            Content="Browse" />
-                    </Grid>
+                    <Line
+                        Stroke="Black"
+                        StrokeThickness="1"
+                        X1="0"
+                        X2="400"
+                        Y1="0"
+                        Y2="0" />
 
                     <TextBox x:Name="PracticeNameTextBox" Header="Practice Name" />
-                    <TextBox x:Name="StreetTextBox" Header="Street" />
-
-                    <Grid ColumnSpacing="12">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*" />
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="1*" />
-                        </Grid.ColumnDefinitions>
-
-                        <TextBox
-                            x:Name="CityTextBox"
-                            Grid.Column="0"
-                            Header="City" />
-                        <TextBox
-                            x:Name="StateTextBox"
-                            Grid.Column="1"
-                            Header="State / Province" />
-                        <TextBox
-                            x:Name="ZipTextBox"
-                            Grid.Column="2"
-                            Header="Zip / Postal Code" />
-                    </Grid>
-
-                    <ComboBox
-                        x:Name="CountryComboBox"
-                        Width="220"
-                        Header="Country"
-                        SelectedIndex="0">
-                        <ComboBoxItem Content="United States" />
-                        <ComboBoxItem Content="Canada" />
-                    </ComboBox>
+                    <TextBox
+                        x:Name="PracticeAddressTextBox"
+                        AcceptsReturn="True"
+                        Header="Practice Address"
+                        MinHeight="120"
+                        TextWrapping="Wrap" />
+                    <Line
+                        Stroke="Black"
+                        StrokeThickness="1"
+                        X1="0"
+                        X2="400"
+                        Y1="0"
+                        Y2="0" />
 
                     <TextBlock FontWeight="SemiBold" Text="Devices" />
+                    <TextBlock
+                        FontSize="12"
+                        FontStyle="Italic"
+                        Text="For S-Pan/VistaPano 2.0/3D Prime you must change program after install to download drivers"
+                        TextWrapping="Wrap" />
                     <CheckBox x:Name="ScanXCheckBox" Content="ScanX" />
                     <CheckBox x:Name="ScanXClassicCheckBox" Content="ScanX Classic" />
                     <CheckBox x:Name="CamXCheckBox" Content="CamX" />
                     <CheckBox x:Name="SensorXCheckBox" Content="SensorX" />
                     <CheckBox x:Name="TwainCheckBox" Content="Twain" />
-                    <Button Content="Export Options" />
+                    <Line
+                        Stroke="Black"
+                        StrokeThickness="1"
+                        X1="0"
+                        X2="400"
+                        Y1="0"
+                        Y2="0" />
+                    <Button
+                        x:Name="ExportOptionsButton"
+                        Click="ExportOptionsButton_Click"
+                        Content="Export Options" />
                 </StackPanel>
             </ScrollViewer>
         </Grid>
