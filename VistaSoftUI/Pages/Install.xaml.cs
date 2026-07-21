@@ -1,4 +1,7 @@
 using System;
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using VistaSoftUI.Models;
@@ -29,6 +32,8 @@ namespace VistaSoftUI.Pages
             [".iso"],
             "Open VistaSoft ISO",
             "VistaSoft ISO (*.iso)");
+
+        private PickedFileSelection? _selectedIsoFile;
 
         public Install()
         {
@@ -96,10 +101,98 @@ namespace VistaSoftUI.Pages
 
         private async void OpenVistaSoftIsoButton_Click(object sender, RoutedEventArgs e)
         {
+            await PickVistaSoftIsoAsync();
+        }
+
+        private async void InstallButton_Click(object sender, RoutedEventArgs e)
+        {
+            PickedFileSelection? selectedIsoFile = _selectedIsoFile;
+
+            if (selectedIsoFile is null)
+            {
+                InstallStatusTextBlock.Text = "Select a VistaSoft ISO to continue.";
+
+                if (!await PickVistaSoftIsoAsync())
+                {
+                    InstallStatusTextBlock.Text = "Install canceled. No ISO selected.";
+                    return;
+                }
+
+                selectedIsoFile = _selectedIsoFile;
+            }
+
+            if (selectedIsoFile is null)
+            {
+                InstallStatusTextBlock.Text = "Install canceled. No ISO selected.";
+                return;
+            }
+
+            if (!File.Exists(selectedIsoFile.FilePath))
+            {
+                InstallStatusTextBlock.Text = $"ISO file no longer exists: {selectedIsoFile.FilePath}";
+                return;
+            }
+
+            InstallButton.IsEnabled = false;
+            InstallStatusTextBlock.Text = "Mounting selected VistaSoft ISO...";
+
+            try
+            {
+                string scriptPath = Path.Combine(AppContext.BaseDirectory, "Scripts", "mount_vistasoft.bat");
+
+                if (!File.Exists(scriptPath))
+                {
+                    InstallStatusTextBlock.Text = $"Mount script not found: {scriptPath}";
+                    return;
+                }
+
+                ProcessStartInfo startInfo = new()
+                {
+                    FileName = "cmd.exe",
+                    RedirectStandardError = true,
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                };
+
+                startInfo.ArgumentList.Add("/d");
+                startInfo.ArgumentList.Add("/c");
+                startInfo.ArgumentList.Add(scriptPath);
+                startInfo.ArgumentList.Add(selectedIsoFile.FilePath);
+
+                using Process? process = Process.Start(startInfo);
+
+                if (process is null)
+                {
+                    InstallStatusTextBlock.Text = "Unable to start the mount script.";
+                    return;
+                }
+
+                string output = await process.StandardOutput.ReadToEndAsync();
+                string error = await process.StandardError.ReadToEndAsync();
+
+                await process.WaitForExitAsync();
+
+                InstallStatusTextBlock.Text = process.ExitCode == 0
+                    ? $"ISO mounted successfully.{Environment.NewLine}{output.Trim()}"
+                    : $"Unable to mount ISO. Exit code: {process.ExitCode}{Environment.NewLine}{output.Trim()}{Environment.NewLine}{error.Trim()}";
+            }
+            catch (Exception ex)
+            {
+                InstallStatusTextBlock.Text = $"Unable to mount ISO: {ex.Message}";
+            }
+            finally
+            {
+                InstallButton.IsEnabled = true;
+            }
+        }
+
+        private async Task<bool> PickVistaSoftIsoAsync()
+        {
             if (App.MainWindow is not Window owner)
             {
                 SelectedVistaSoftFileTextBlock.Text = "Unable to open the file picker.";
-                return;
+                return false;
             }
 
             PickedFileSelection? selection = await FilePickerService.PickFileAsync(owner, IsoFilePicker);
@@ -107,10 +200,14 @@ namespace VistaSoftUI.Pages
             if (selection is null)
             {
                 SelectedVistaSoftFileTextBlock.Text = "No ISO file selected.";
-                return;
+                return false;
             }
 
+            _selectedIsoFile = selection;
             SelectedVistaSoftFileTextBlock.Text = selection.FilePath;
+            InstallStatusTextBlock.Text = string.Empty;
+
+            return true;
         }
 
         private VistaSoftInstallOptions ReadOptionsFromForm()

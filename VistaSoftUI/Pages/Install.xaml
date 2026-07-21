@@ -147,7 +147,13 @@
                     x:Name="SelectedVistaSoftFileTextBlock"
                     Text="No ISO file selected"
                     TextWrapping="Wrap" />
-                <Button Content="Install" />
+                <Button
+                    x:Name="InstallButton"
+                    Click="InstallButton_Click"
+                    Content="Install" />
+                <TextBlock
+                    x:Name="InstallStatusTextBlock"
+                    TextWrapping="Wrap" />
             </StackPanel>
         </Grid>
     </Grid>
