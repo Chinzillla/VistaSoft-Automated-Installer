@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="VistaSoftUI.Pages.Install"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Padding="32" ColumnSpacing="24">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0" RowSpacing="16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock
+                Grid.Row="0"
+                FontSize="24"
+                FontWeight="SemiBold"
+                Text="Options" />
+
+            <TextBlock
+                Grid.Row="1"
+                FontSize="16"
+                TextWrapping="Wrap">
+                Use Case:<LineBreak />
+                - Import existing options files for VistaSoft Install<LineBreak />
+                - Configure options for VistaSoft Install<LineBreak />
+                - Export for VistaSoft Install on another computer</TextBlock>
+
+
+            <ScrollViewer
+                Grid.Row="2"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="0,0,16,0" Spacing="16">
+                    <Button
+                        x:Name="ImportOptionsButton"
+                        Click="ImportOptionsButton_Click"
+                        Content="Import Options" />
+                    <TextBlock
+                        x:Name="SelectedOptionsFileTextBlock"
+                        Text="No options file selected."
+                        TextWrapping="Wrap" />
+                    <Line
+                        Stroke="Black"
+                        StrokeThickness="1"
+                        X1="0"
+                        X2="400"
+                        Y1="0"
+                        Y2="0" />
+                    <CheckBox x:Name="ConnectModeCheckBox" Content="VistaSoft Connect" />
+                    <TextBlock Text="Installation Type" />
+                    <TextBlock
+                        FontSize="12"
+                        FontStyle="Italic"
+                        Text="For Client you will need to enter server hostname after install"
+                        TextWrapping="Wrap" />
+                    <RadioButton
+                        x:Name="LocalRadioButton"
+                        Content="Local"
+                        GroupName="InstallType"
+                        IsChecked="True" />
+                    <RadioButton
+                        x:Name="ClientRadioButton"
+                        Content="Client"
+                        GroupName="InstallType" />
+                    <RadioButton
+                        x:Name="ServerRadioButton"
+                        Content="Server"
+                        GroupName="InstallType" />
+                    <Line
+                        Stroke="Black"
+                        StrokeThickness="1"
+                        X1="0"
+                        X2="400"
+                        Y1="0"
+                        Y2="0" />
+
+                    <TextBox x:Name="PracticeNameTextBox" Header="Practice Name" />
+                    <TextBox
+                        x:Name="PracticeAddressTextBox"
+                        AcceptsReturn="True"
+                        Header="Practice Address"
+                        MinHeight="120"
+                        TextWrapping="Wrap" />
+                    <Line
+                        Stroke="Black"
+                        StrokeThickness="1"
+                        X1="0"
+                        X2="400"
+                        Y1="0"
+                        Y2="0" />
+
+                    <TextBlock FontWeight="SemiBold" Text="Devices" />
+                    <TextBlock
+                        FontSize="12"
+                        FontStyle="Italic"
+                        Text="For S-Pan/VistaPano 2.0/3D Prime you must change program after install to download drivers"
+                        TextWrapping="Wrap" />
+                    <CheckBox x:Name="ScanXCheckBox" Content="ScanX" />
+                    <CheckBox x:Name="ScanXClassicCheckBox" Content="ScanX Classic" />
+                    <CheckBox x:Name="CamXCheckBox" Content="CamX" />
+                    <CheckBox x:Name="SensorXCheckBox" Content="SensorX" />
+                    <CheckBox x:Name="TwainCheckBox" Content="Twain" />
+                    <Line
+                        Stroke="Black"
+                        StrokeThickness="1"
+                        X1="0"
+                        X2="400"
+                        Y1="0"
+                        Y2="0" />
+                    <Button
+                        x:Name="ExportOptionsButton"
+                        Click="ExportOptionsButton_Click"
+                        Content="Export Options" />
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+
+        <Grid Grid.Column="1" RowSpacing="16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock
+                Grid.Row="0"
+                FontSize="24"
+                FontWeight="SemiBold"
+                Text="Install VistaSoft" />
+
+            <StackPanel Grid.Row="1" Spacing="12">
+                <Button
+                    x:Name="OpenVistaSoftIsoButton"
+                    Click="OpenVistaSoftIsoButton_Click"
+                    Content="Open VistaSoft iso" />
+                <TextBlock
+                    x:Name="SelectedVistaSoftFileTextBlock"
+                    Text="No ISO file selected"
+                    TextWrapping="Wrap" />
+                <Button
+                    x:Name="InstallButton"
+                    Click="InstallButton_Click"
+                    Content="Install" />
+                <TextBlock
+                    x:Name="InstallStatusTextBlock"
+                    TextWrapping="Wrap" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>
