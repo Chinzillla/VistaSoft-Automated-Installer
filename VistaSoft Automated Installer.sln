@@ -5,6 +5,10 @@ VisualStudioVersion = 17.14.37411.7 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VistaSoftUI", "VistaSoftUI\VistaSoftUI.csproj", "{631964DC-8BC8-4CD5-8364-6A689DA12228}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installer", "Installer", "{1860D2E4-5C43-71D5-59A5-599A4DE1DF67}"
+EndProject
+Project("{B7DD6F7E-DEF8-4E67-B5B7-07EF123DB6F0}") = "VistaSoftInstaller", "Installer\VistaSoftInstaller.wixproj", "{EE1BCE0F-1AEC-4198-9811-A4D49AD76DC3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM64 = Debug|ARM64
@@ -27,9 +31,18 @@ Global
 		{631964DC-8BC8-4CD5-8364-6A689DA12228}.Release|x64.Build.0 = Release|x64
 		{631964DC-8BC8-4CD5-8364-6A689DA12228}.Release|x86.ActiveCfg = Release|x86
 		{631964DC-8BC8-4CD5-8364-6A689DA12228}.Release|x86.Build.0 = Release|x86
+		{EE1BCE0F-1AEC-4198-9811-A4D49AD76DC3}.Debug|ARM64.ActiveCfg = Debug|x64
+		{EE1BCE0F-1AEC-4198-9811-A4D49AD76DC3}.Debug|x64.ActiveCfg = Debug|x64
+		{EE1BCE0F-1AEC-4198-9811-A4D49AD76DC3}.Debug|x86.ActiveCfg = Debug|x64
+		{EE1BCE0F-1AEC-4198-9811-A4D49AD76DC3}.Release|ARM64.ActiveCfg = Release|x64
+		{EE1BCE0F-1AEC-4198-9811-A4D49AD76DC3}.Release|x64.ActiveCfg = Release|x64
+		{EE1BCE0F-1AEC-4198-9811-A4D49AD76DC3}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EE1BCE0F-1AEC-4198-9811-A4D49AD76DC3} = {1860D2E4-5C43-71D5-59A5-599A4DE1DF67}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E7B4A6CF-CC7A-4BDA-98FC-56C1ABF3F730}

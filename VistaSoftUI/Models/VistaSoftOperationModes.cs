@@ -17,16 +17,17 @@ namespace VistaSoftUI.Models
             Server,
         ];
 
-        public static bool IsKnown(string? operationMode)
-        {
-            return !string.IsNullOrWhiteSpace(operationMode)
-                && KnownModes.Contains(operationMode, StringComparer.OrdinalIgnoreCase);
-        }
-
         public static string NormalizeOrDefault(string? operationMode)
         {
-            return IsKnown(operationMode)
-                ? operationMode!.Trim().ToLowerInvariant()
+            if (string.IsNullOrWhiteSpace(operationMode))
+            {
+                return Local;
+            }
+
+            string normalizedOperationMode = operationMode.Trim().ToLowerInvariant();
+
+            return KnownModes.Contains(normalizedOperationMode, StringComparer.OrdinalIgnoreCase)
+                ? normalizedOperationMode
                 : Local;
         }
     }

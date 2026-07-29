@@ -47,7 +47,7 @@ This program is meant to reduce installation time and create a standardized prot
 - 3-4 seconds per install
 
 #### Edge Cases/Constraints:
-- Some computers have issues using explorer.exe to mount images (very rare)
+- ISO mounting requires Windows 8 or newer and administrator privileges for the virtual disk attach operation.
 
 ### Total Time Saved
 Per Install:
@@ -84,3 +84,29 @@ In my app, you can
 - Uninstallation support for wider variety of VisionX, VistaEasy, and DBSWIN Softwares
 - Post VistaSoft installation automation scripts for opening ports, setting folder virus exclusions, and permissions
 - Ability to browse to an iso, otherwise to choose a version of VistaSoft to download from Air Techniques website
+
+## Build the MSI installer
+
+The MSI is built with WiX Toolset from a self-contained x64 publish of the WinUI app. The publish output includes the .NET runtime, Windows App SDK files, and the bundled `Scripts` folder.
+
+From the repository root, run:
+
+```powershell
+.\Installer\Build-Msi.ps1
+```
+
+The installer will be written to:
+
+```text
+artifacts\msi\VistaSoftAutomatedInstaller-0.0.1c-x64.msi
+```
+
+To build a new MSI version, pass a three-part Windows Installer version:
+
+```powershell
+.\Installer\Build-Msi.ps1 -ProductVersion 0.0.2 -DisplayVersion 0.0.2
+```
+
+Run the MSI as administrator on target computers. It installs the app under `Program Files\VistaSoft Automated Installer`, adds Start Menu and Desktop shortcuts, and opens the app after an interactive install finishes. During install, the selected VistaSoft ISO is mounted automatically by the CMD workflow before the options-file install runs.
+
+Windows Installer requires a numeric internal version, so lettered versions such as `0.0.1c` are used for the MSI filename and app-facing release notes while the internal MSI version stays numeric.

@@ -1,19 +1,20 @@
 using System;
+using System.Diagnostics;
+using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using VistaSoftUI.Models;
 using VistaSoftUI.Services;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 namespace VistaSoftUI.Pages
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class Install : Page
     {
+        private const string InstallWorkflowScriptName = "install_vistasoft_workflow.bat";
+        private const string OptionsContentEnvironmentVariable = "VISTASOFT_OPTIONS_CONTENT_BASE64";
+
         private static readonly FilePickerSelection OptionsFilePicker = new(
             [".options"],
             "Import Options",
@@ -29,6 +30,8 @@ namespace VistaSoftUI.Pages
             [".iso"],
             "Open VistaSoft ISO",
             "VistaSoft ISO (*.iso)");
+
+        private PickedFileSelection? _selectedIsoFile;
 
         public Install()
         {
@@ -96,10 +99,110 @@ namespace VistaSoftUI.Pages
 
         private async void OpenVistaSoftIsoButton_Click(object sender, RoutedEventArgs e)
         {
+            await PickVistaSoftIsoAsync();
+        }
+
+        private async void InstallButton_Click(object sender, RoutedEventArgs e)
+        {
+            PickedFileSelection? selectedIsoFile = _selectedIsoFile;
+
+            if (selectedIsoFile is null)
+            {
+                InstallStatusTextBlock.Text = "Select a VistaSoft ISO to continue.";
+
+                if (!await PickVistaSoftIsoAsync())
+                {
+                    InstallStatusTextBlock.Text = "Install canceled. No ISO selected.";
+                    return;
+                }
+
+                selectedIsoFile = _selectedIsoFile;
+            }
+
+            if (selectedIsoFile is null)
+            {
+                InstallStatusTextBlock.Text = "Install canceled. No ISO selected.";
+                return;
+            }
+
+            if (!File.Exists(selectedIsoFile.FilePath))
+            {
+                InstallStatusTextBlock.Text = $"ISO file no longer exists: {selectedIsoFile.FilePath}";
+                return;
+            }
+
+            InstallButton.IsEnabled = false;
+            InstallStatusTextBlock.Text = "Running VistaSoft install workflow...";
+
+            try
+            {
+                string scriptPath = Path.Combine(AppContext.BaseDirectory, "Scripts", InstallWorkflowScriptName);
+
+                if (!File.Exists(scriptPath))
+                {
+                    InstallStatusTextBlock.Text = $"Install workflow script not found: {scriptPath}";
+                    return;
+                }
+
+                VistaSoftInstallOptions options = ReadOptionsFromForm();
+                string optionsContent = OptionsFileService.CreateFileContent(options);
+
+                ProcessStartInfo startInfo = new()
+                {
+                    FileName = "cmd.exe",
+                    RedirectStandardError = true,
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                };
+
+                startInfo.Environment[OptionsContentEnvironmentVariable] =
+                    Convert.ToBase64String(Encoding.UTF8.GetBytes(optionsContent));
+                startInfo.ArgumentList.Add("/d");
+                startInfo.ArgumentList.Add("/c");
+                startInfo.ArgumentList.Add(scriptPath);
+                startInfo.ArgumentList.Add(selectedIsoFile.FilePath);
+
+                using Process? process = Process.Start(startInfo);
+
+                if (process is null)
+                {
+                    InstallStatusTextBlock.Text = "Unable to start the install workflow script.";
+                    return;
+                }
+
+                Task<string> outputTask = process.StandardOutput.ReadToEndAsync();
+                Task<string> errorTask = process.StandardError.ReadToEndAsync();
+
+                await process.WaitForExitAsync();
+
+                string output = await outputTask;
+                string error = await errorTask;
+
+                if (process.ExitCode != 0)
+                {
+                    InstallStatusTextBlock.Text = $"Install workflow failed. Exit code: {process.ExitCode}{Environment.NewLine}{output.Trim()}{Environment.NewLine}{error.Trim()}";
+                    return;
+                }
+
+                InstallStatusTextBlock.Text = $"Install workflow completed successfully.{Environment.NewLine}{output.Trim()}";
+            }
+            catch (Exception ex)
+            {
+                InstallStatusTextBlock.Text = $"Unable to run install workflow: {ex.Message}";
+            }
+            finally
+            {
+                InstallButton.IsEnabled = true;
+            }
+        }
+
+        private async Task<bool> PickVistaSoftIsoAsync()
+        {
             if (App.MainWindow is not Window owner)
             {
                 SelectedVistaSoftFileTextBlock.Text = "Unable to open the file picker.";
-                return;
+                return false;
             }
 
             PickedFileSelection? selection = await FilePickerService.PickFileAsync(owner, IsoFilePicker);
@@ -107,10 +210,14 @@ namespace VistaSoftUI.Pages
             if (selection is null)
             {
                 SelectedVistaSoftFileTextBlock.Text = "No ISO file selected.";
-                return;
+                return false;
             }
 
+            _selectedIsoFile = selection;
             SelectedVistaSoftFileTextBlock.Text = selection.FilePath;
+            InstallStatusTextBlock.Text = string.Empty;
+
+            return true;
         }
 
         private VistaSoftInstallOptions ReadOptionsFromForm()
