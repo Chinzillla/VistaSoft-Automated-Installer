@@ -29,9 +29,9 @@ namespace VistaSoftUI
             Type? pageType = tag switch
             {
                 "install" => typeof(Install),
-                "uninstall" => typeof(Uninstall),
+                //"uninstall" => typeof(Uninstall),
+                //"dbcopy" => typeof(Dbcopy),
                 "info" => typeof(Info),
-                "dbcopy" => typeof(Dbcopy),
                 _ => null,
             };
 
