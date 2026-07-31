@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installer", "Installer", "{
 EndProject
 Project("{B7DD6F7E-DEF8-4E67-B5B7-07EF123DB6F0}") = "VistaSoftInstaller", "Installer\VistaSoftInstaller.wixproj", "{EE1BCE0F-1AEC-4198-9811-A4D49AD76DC3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VistaSoftIsoMounter", "VistaSoftIsoMounter\VistaSoftIsoMounter.csproj", "{90D08110-705F-4168-951A-44DF1B556A4A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM64 = Debug|ARM64
@@ -37,6 +39,18 @@ Global
 		{EE1BCE0F-1AEC-4198-9811-A4D49AD76DC3}.Release|ARM64.ActiveCfg = Release|x64
 		{EE1BCE0F-1AEC-4198-9811-A4D49AD76DC3}.Release|x64.ActiveCfg = Release|x64
 		{EE1BCE0F-1AEC-4198-9811-A4D49AD76DC3}.Release|x86.ActiveCfg = Release|x64
+		{90D08110-705F-4168-951A-44DF1B556A4A}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{90D08110-705F-4168-951A-44DF1B556A4A}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{90D08110-705F-4168-951A-44DF1B556A4A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{90D08110-705F-4168-951A-44DF1B556A4A}.Debug|x64.Build.0 = Debug|Any CPU
+		{90D08110-705F-4168-951A-44DF1B556A4A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{90D08110-705F-4168-951A-44DF1B556A4A}.Debug|x86.Build.0 = Debug|Any CPU
+		{90D08110-705F-4168-951A-44DF1B556A4A}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{90D08110-705F-4168-951A-44DF1B556A4A}.Release|ARM64.Build.0 = Release|Any CPU
+		{90D08110-705F-4168-951A-44DF1B556A4A}.Release|x64.ActiveCfg = Release|Any CPU
+		{90D08110-705F-4168-951A-44DF1B556A4A}.Release|x64.Build.0 = Release|Any CPU
+		{90D08110-705F-4168-951A-44DF1B556A4A}.Release|x86.ActiveCfg = Release|Any CPU
+		{90D08110-705F-4168-951A-44DF1B556A4A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

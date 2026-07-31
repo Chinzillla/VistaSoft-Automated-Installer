@@ -104,9 +104,9 @@ artifacts\msi\VistaSoftAutomatedInstaller-0.0.1c-x64.msi
 To build a new MSI version, pass a three-part Windows Installer version:
 
 ```powershell
-.\Installer\Build-Msi.ps1 -ProductVersion 0.0.2 -DisplayVersion 0.0.2
+.\Installer\Build-Msi.ps1 -ProductVersion 0.0.3 -DisplayVersion 0.0.2
 ```
 
-Run the MSI as administrator on target computers. It installs the app under `Program Files\VistaSoft Automated Installer`, adds Start Menu and Desktop shortcuts, and opens the app after an interactive install finishes. During install, the selected VistaSoft ISO is mounted automatically by the CMD workflow before the options-file install runs.
+Run the MSI as administrator on target computers. It installs the app under `Program Files\VistaSoft Automated Installer`, adds Start Menu and Desktop shortcuts, and opens the app after an interactive install finishes. During install, the selected VistaSoft ISO is mounted automatically by the bundled ISO mounter before the options-file install runs.
 
-Windows Installer requires a numeric internal version, so lettered versions such as `0.0.1c` are used for the MSI filename and app-facing release notes while the internal MSI version stays numeric.
+Windows Installer requires a numeric internal version, so lettered versions such as `0.0.1c` are used for the MSI filename and app-facing release notes while the internal MSI version stays numeric. The internal version may be higher than the display version so Windows replaces older test installers correctly.
