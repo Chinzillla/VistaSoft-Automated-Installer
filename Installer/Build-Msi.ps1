@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [ValidatePattern('^\d+\.\d+\.\d+$')]
-    [string]$ProductVersion = "0.0.1",
+    [string]$ProductVersion = "0.0.2",
 
     [ValidatePattern('^[0-9A-Za-z][0-9A-Za-z._-]*$')]
     [string]$DisplayVersion = "0.0.1c",
@@ -218,6 +218,7 @@ $publishDirectory = Join-Path $repoRoot "artifacts\publish\$RuntimeIdentifier"
 $msiDirectory = Join-Path $repoRoot "artifacts\msi"
 $generatedWxsPath = Join-Path $installerRoot "GeneratedFiles.wxs"
 $appProject = Join-Path $repoRoot "VistaSoftUI\VistaSoftUI.csproj"
+$isoMounterProject = Join-Path $repoRoot "VistaSoftIsoMounter\VistaSoftIsoMounter.csproj"
 $wixProject = Join-Path $installerRoot "VistaSoftInstaller.wixproj"
 
 $artifactsRoot = [System.IO.Path]::GetFullPath((Join-Path $repoRoot "artifacts"))
@@ -258,6 +259,29 @@ $publishArguments = @(
 
 if ($LASTEXITCODE -ne 0) {
     throw "dotnet publish failed with exit code $LASTEXITCODE."
+}
+
+Write-Host "Publishing VistaSoft ISO mounter helper..."
+
+$isoMounterPublishArguments = @(
+    "publish",
+    $isoMounterProject,
+    "-c",
+    $Configuration,
+    "-r",
+    $RuntimeIdentifier,
+    "--self-contained",
+    "true",
+    "-p:PublishSingleFile=false",
+    "-p:PublishTrimmed=false",
+    "-o",
+    $publishDirectory
+)
+
+& dotnet @isoMounterPublishArguments
+
+if ($LASTEXITCODE -ne 0) {
+    throw "dotnet publish for VistaSoftIsoMounter failed with exit code $LASTEXITCODE."
 }
 
 Write-Host "Generating WiX component list..."
