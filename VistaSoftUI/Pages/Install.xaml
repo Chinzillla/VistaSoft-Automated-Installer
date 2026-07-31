@@ -25,30 +25,28 @@
                 FontSize="24"
                 FontWeight="SemiBold"
                 Text="Options" />
-
-            <TextBlock
+            <StackPanel
                 Grid.Row="1"
-                FontSize="16"
-                TextWrapping="Wrap">
-                Use Case:<LineBreak />
-                - Import existing options files for VistaSoft Install<LineBreak />
-                - Configure options for VistaSoft Install<LineBreak />
-                - Export for VistaSoft Install on another computer</TextBlock>
-
-
+                Orientation="Horizontal"
+                Spacing="16">
+                <Button
+                    x:Name="ImportOptionsButton"
+                    Click="ImportOptionsButton_Click"
+                    Content="Import Options" />
+                <Button
+                    x:Name="ExportOptionsButton"
+                    Click="ExportOptionsButton_Click"
+                    Content="Export Options" />
+                <TextBlock
+                    x:Name="SelectedOptionsFileTextBlock"
+                    Text="No options file selected."
+                    TextWrapping="Wrap" />
+            </StackPanel>
             <ScrollViewer
                 Grid.Row="2"
                 HorizontalScrollBarVisibility="Disabled"
                 VerticalScrollBarVisibility="Auto">
                 <StackPanel Margin="0,0,16,0" Spacing="16">
-                    <Button
-                        x:Name="ImportOptionsButton"
-                        Click="ImportOptionsButton_Click"
-                        Content="Import Options" />
-                    <TextBlock
-                        x:Name="SelectedOptionsFileTextBlock"
-                        Text="No options file selected."
-                        TextWrapping="Wrap" />
                     <Line
                         Stroke="Black"
                         StrokeThickness="1"
@@ -87,9 +85,9 @@
                     <TextBox x:Name="PracticeNameTextBox" Header="Practice Name" />
                     <TextBox
                         x:Name="PracticeAddressTextBox"
+                        MinHeight="120"
                         AcceptsReturn="True"
                         Header="Practice Address"
-                        MinHeight="120"
                         TextWrapping="Wrap" />
                     <Line
                         Stroke="Black"
@@ -117,10 +115,6 @@
                         X2="400"
                         Y1="0"
                         Y2="0" />
-                    <Button
-                        x:Name="ExportOptionsButton"
-                        Click="ExportOptionsButton_Click"
-                        Content="Export Options" />
                 </StackPanel>
             </ScrollViewer>
         </Grid>
@@ -150,9 +144,7 @@
                     x:Name="InstallButton"
                     Click="InstallButton_Click"
                     Content="Install" />
-                <TextBlock
-                    x:Name="InstallStatusTextBlock"
-                    TextWrapping="Wrap" />
+                <TextBlock x:Name="InstallStatusTextBlock" TextWrapping="Wrap" />
             </StackPanel>
         </Grid>
     </Grid>

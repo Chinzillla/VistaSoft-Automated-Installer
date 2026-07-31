@@ -10,8 +10,8 @@ namespace VistaSoftUI.Pages
         [
             // Add newest changelog entries at the top of this list.
             new ChangelogEntry(
-                "0.0.1c",
-                "07/29/2026",
+                "0.0.1",
+                "07/31/2026",
                 [
                     "Added a Windows installer so the app can be installed on other computers.",
                     "The installer now creates Start Menu and Desktop shortcuts.",
