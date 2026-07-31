@@ -98,13 +98,13 @@ From the repository root, run:
 The installer will be written to:
 
 ```text
-artifacts\msi\VistaSoftAutomatedInstaller-0.0.1c-x64.msi
+artifacts\msi\VistaSoftAutomatedInstaller-0.0.1-x64.msi
 ```
 
 To build a new MSI version, pass a three-part Windows Installer version:
 
 ```powershell
-.\Installer\Build-Msi.ps1 -ProductVersion 0.0.3 -DisplayVersion 0.0.2
+.\Installer\Build-Msi.ps1 -ProductVersion 0.0.4 -DisplayVersion 0.0.2
 ```
 
 Run the MSI as administrator on target computers. It installs the app under `Program Files\VistaSoft Automated Installer`, adds Start Menu and Desktop shortcuts, and opens the app after an interactive install finishes. During install, the selected VistaSoft ISO is mounted automatically by the bundled ISO mounter before the options-file install runs.

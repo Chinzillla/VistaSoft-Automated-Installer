@@ -154,14 +154,11 @@ namespace VistaSoftUI.Pages
                     RedirectStandardOutput = true,
                     UseShellExecute = false,
                     CreateNoWindow = true,
+                    Arguments = $"/d /s /c call \"{scriptPath}\" \"{selectedIsoFile.FilePath}\"",
                 };
 
                 startInfo.Environment[OptionsContentEnvironmentVariable] =
                     Convert.ToBase64String(Encoding.UTF8.GetBytes(optionsContent));
-                startInfo.ArgumentList.Add("/d");
-                startInfo.ArgumentList.Add("/c");
-                startInfo.ArgumentList.Add(scriptPath);
-                startInfo.ArgumentList.Add(selectedIsoFile.FilePath);
 
                 using Process? process = Process.Start(startInfo);
 
