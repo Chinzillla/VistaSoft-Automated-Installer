@@ -1,10 +1,9 @@
-# VistaSoft Installation Script
+# VistaSoft Automated Installer
 
-This program is meant to reduce installation time and create a standardized protocol for VistaSoft by automating all pre and post installation steps that we take internally for a complete VistaSoft installation
+This program is meant to reduce installation time for a complete VistaSoft installation
 
-- Standardization can ensure that every PC has proper permissions in place and maintains secure
-- Reducing tech team operational costs
-- Easier onboarding of dealer technicians and IT personnel for large volume VistaSoft installations
+- Create, export, and import options files across computers to reduce repeat configuring each install on multiple client computers
+- Easy to use silent installer for dealer techs or IT staff
 
 Currently only handles installation of vistasoft only, no pre or post installation configuration steps are added.
 
