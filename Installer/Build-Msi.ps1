@@ -1,10 +1,10 @@
 [CmdletBinding()]
 param(
     [ValidatePattern('^\d+\.\d+\.\d+$')]
-    [string]$ProductVersion = "0.0.2",
+    [string]$ProductVersion = "0.0.5",
 
     [ValidatePattern('^[0-9A-Za-z][0-9A-Za-z._-]*$')]
-    [string]$DisplayVersion = "0.0.1c",
+    [string]$DisplayVersion = "0.0.2",
 
     [ValidateSet("Debug", "Release")]
     [string]$Configuration = "Release",
@@ -15,7 +15,17 @@ param(
     [ValidateSet("win-x64")]
     [string]$RuntimeIdentifier = "win-x64",
 
-    [switch]$IncludeSymbols
+    [switch]$IncludeSymbols,
+
+    [string]$CertificateThumbprint,
+
+    [ValidateSet("CurrentUser", "LocalMachine")]
+    [string]$CertificateStoreLocation = "CurrentUser",
+
+    [ValidatePattern('^https?://')]
+    [string]$TimestampUrl = "http://timestamp.digicert.com",
+
+    [switch]$RequireSignature
 )
 
 $ErrorActionPreference = "Stop"
@@ -83,6 +93,119 @@ function Escape-Xml {
     )
 
     return [System.Security.SecurityElement]::Escape($Value)
+}
+
+function Get-SignToolPath {
+    $signToolCommand = Get-Command "signtool.exe" -ErrorAction SilentlyContinue
+
+    if ($signToolCommand -ne $null) {
+        return $signToolCommand.Source
+    }
+
+    $windowsKitsBin = Join-Path ${env:ProgramFiles(x86)} "Windows Kits\10\bin"
+
+    if (Test-Path -LiteralPath $windowsKitsBin) {
+        $signTool = Get-ChildItem -LiteralPath $windowsKitsBin -Filter "signtool.exe" -File -Recurse |
+            Where-Object { $_.DirectoryName -like "*\x64" } |
+            Sort-Object FullName -Descending |
+            Select-Object -First 1
+
+        if ($signTool -ne $null) {
+            return $signTool.FullName
+        }
+    }
+
+    throw "signtool.exe was not found. Install the Windows SDK Signing Tools component."
+}
+
+function Assert-CodeSigningCertificate {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Thumbprint,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet("CurrentUser", "LocalMachine")]
+        [string]$StoreLocation
+    )
+
+    $normalizedThumbprint = $Thumbprint.Replace(" ", "").ToUpperInvariant()
+    $resolvedStoreLocation = [System.Enum]::Parse(
+        [System.Security.Cryptography.X509Certificates.StoreLocation],
+        $StoreLocation)
+    $certificateStore = [System.Security.Cryptography.X509Certificates.X509Store]::new(
+        "My",
+        $resolvedStoreLocation)
+
+    try {
+        $certificateStore.Open([System.Security.Cryptography.X509Certificates.OpenFlags]::ReadOnly)
+        $certificate = $certificateStore.Certificates |
+            Where-Object { $_.Thumbprint -eq $normalizedThumbprint } |
+            Select-Object -First 1
+
+        if ($certificate -eq $null) {
+            throw "Code-signing certificate $normalizedThumbprint was not found in $StoreLocation\My."
+        }
+
+        if (-not $certificate.HasPrivateKey) {
+            throw "Code-signing certificate $normalizedThumbprint does not have an accessible private key."
+        }
+
+        if ($certificate.NotAfter -le [DateTime]::Now) {
+            throw "Code-signing certificate $normalizedThumbprint expired on $($certificate.NotAfter)."
+        }
+    }
+    finally {
+        $certificateStore.Dispose()
+    }
+}
+
+function Invoke-CodeSigning {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$SignToolPath,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Path,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Thumbprint,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet("CurrentUser", "LocalMachine")]
+        [string]$StoreLocation,
+
+        [Parameter(Mandatory = $true)]
+        [string]$TimestampServer
+    )
+
+    $signArguments = @(
+        "sign",
+        "/sha1",
+        $Thumbprint.Replace(" ", ""),
+        "/fd",
+        "SHA256",
+        "/tr",
+        $TimestampServer,
+        "/td",
+        "SHA256"
+    )
+
+    if ($StoreLocation -eq "LocalMachine") {
+        $signArguments += "/sm"
+    }
+
+    $signArguments += $Path
+    & $SignToolPath @signArguments
+
+    if ($LASTEXITCODE -ne 0) {
+        throw "Code signing failed for $Path with exit code $LASTEXITCODE."
+    }
+
+    $signature = Get-AuthenticodeSignature -LiteralPath $Path
+
+    if ($signature.Status -ne [System.Management.Automation.SignatureStatus]::Valid) {
+        throw "Signature verification failed for $Path. Status: $($signature.Status)."
+    }
 }
 
 function Get-RelativePath {
@@ -220,6 +343,19 @@ $generatedWxsPath = Join-Path $installerRoot "GeneratedFiles.wxs"
 $appProject = Join-Path $repoRoot "VistaSoftUI\VistaSoftUI.csproj"
 $isoMounterProject = Join-Path $repoRoot "VistaSoftIsoMounter\VistaSoftIsoMounter.csproj"
 $wixProject = Join-Path $installerRoot "VistaSoftInstaller.wixproj"
+$signToolPath = $null
+
+if ([string]::IsNullOrWhiteSpace($CertificateThumbprint)) {
+    if ($RequireSignature) {
+        throw "A certificate thumbprint is required when -RequireSignature is used."
+    }
+
+    Write-Warning "Building an unsigned development MSI. Public releases should use -CertificateThumbprint and -RequireSignature."
+}
+else {
+    Assert-CodeSigningCertificate -Thumbprint $CertificateThumbprint -StoreLocation $CertificateStoreLocation
+    $signToolPath = Get-SignToolPath
+}
 
 $artifactsRoot = [System.IO.Path]::GetFullPath((Join-Path $repoRoot "artifacts"))
 $fullPublishDirectory = [System.IO.Path]::GetFullPath($publishDirectory)
@@ -284,6 +420,20 @@ if ($LASTEXITCODE -ne 0) {
     throw "dotnet publish for VistaSoftIsoMounter failed with exit code $LASTEXITCODE."
 }
 
+if ($signToolPath -ne $null) {
+    Write-Host "Signing application executables..."
+    Invoke-CodeSigning -SignToolPath $signToolPath `
+        -Path (Join-Path $publishDirectory "VistaSoftUI.exe") `
+        -Thumbprint $CertificateThumbprint `
+        -StoreLocation $CertificateStoreLocation `
+        -TimestampServer $TimestampUrl
+    Invoke-CodeSigning -SignToolPath $signToolPath `
+        -Path (Join-Path $publishDirectory "VistaSoftIsoMounter.exe") `
+        -Thumbprint $CertificateThumbprint `
+        -StoreLocation $CertificateStoreLocation `
+        -TimestampServer $TimestampUrl
+}
+
 Write-Host "Generating WiX component list..."
 New-GeneratedFilesWxs -SourceDirectory $publishDirectory -OutputPath $generatedWxsPath -IncludeSymbols:$IncludeSymbols
 
@@ -309,15 +459,17 @@ if ($LASTEXITCODE -ne 0) {
 
 $expectedMsiPath = Join-Path $msiDirectory "VistaSoftAutomatedInstaller-$DisplayVersion-x64.msi"
 
-if (Test-Path $expectedMsiPath) {
-    Write-Host "MSI created: $expectedMsiPath"
+if (-not (Test-Path -LiteralPath $expectedMsiPath)) {
+    throw "MSI build completed, but the expected file was not created: $expectedMsiPath"
 }
-else {
-    $latestMsi = Get-ChildItem -Path $msiDirectory -Filter "*.msi" | Sort-Object LastWriteTime -Descending | Select-Object -First 1
 
-    if ($latestMsi -eq $null) {
-        throw "MSI build completed, but no .msi file was found in $msiDirectory."
-    }
-
-    Write-Host "MSI created: $($latestMsi.FullName)"
+if ($signToolPath -ne $null) {
+    Write-Host "Signing MSI package..."
+    Invoke-CodeSigning -SignToolPath $signToolPath `
+        -Path $expectedMsiPath `
+        -Thumbprint $CertificateThumbprint `
+        -StoreLocation $CertificateStoreLocation `
+        -TimestampServer $TimestampUrl
 }
+
+Write-Host "MSI created: $expectedMsiPath"

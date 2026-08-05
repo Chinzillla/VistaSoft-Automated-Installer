@@ -10,14 +10,24 @@ namespace VistaSoftUI.Pages
         [
             // Add newest changelog entries at the top of this list.
             new ChangelogEntry(
+                "0.0.2",
+                "08/05/2026",
+                [
+                    "Install errors now explain the likely cause and what the user can do next.",
+                    "Added clear messages for permission problems, missing paths, antivirus blocks, canceled administrator prompts, and other installations already in progress.",
+                    "VistaSoft restart-required results are now treated as successful installations.",
+                ]),
+            new ChangelogEntry(
                 "0.0.1",
-                "07/31/2026",
+                "08/05/2026",
                 [
                     "Added a Windows installer so the app can be installed on other computers.",
-                    "The installer now creates Start Menu and Desktop shortcuts.",
-                    "The app opens automatically after setup is finished.",
-                    "When installing VistaSoft, the selected ISO now mounts automatically and the install continues without asking the user to open the image manually.",
-                    "The VistaSoft options file is still created and used automatically during the install.",
+                    "Desktop and Start Menu shortcuts are now available to every user on the computer.",
+                    "The app now confirms that it is using the exact ISO selected by the user, then unmounts it automatically.",
+                    "VistaSoft installers are checked for a valid Air Techniques or Duerr Dental digital signature before they are opened.",
+                    "Imported options are preserved instead of silently changing or removing settings.",
+                    "Install failures now show a clear explanation and save a diagnostic log, including VistaSoft installer code 255.",
+                    "Improved upgrades so a rebuilt installer correctly replaces an earlier installation.",
                 ]),
             new ChangelogEntry(
                 "0.0.1b",

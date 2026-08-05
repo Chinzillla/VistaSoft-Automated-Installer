@@ -14,6 +14,7 @@ namespace VistaSoftUI.Pages
     {
         private const string InstallWorkflowScriptName = "install_vistasoft_workflow.bat";
         private const string OptionsContentEnvironmentVariable = "VISTASOFT_OPTIONS_CONTENT_BASE64";
+        private const string IsoPathEnvironmentVariable = "VISTASOFT_ISO_PATH";
 
         private static readonly FilePickerSelection OptionsFilePicker = new(
             [".options"],
@@ -32,6 +33,7 @@ namespace VistaSoftUI.Pages
             "VistaSoft ISO (*.iso)");
 
         private PickedFileSelection? _selectedIsoFile;
+        private VistaSoftInstallOptions _importedOptions = new();
 
         public Install()
         {
@@ -57,6 +59,7 @@ namespace VistaSoftUI.Pages
             try
             {
                 VistaSoftInstallOptions options = await OptionsFileService.ReadAsync(selection.FilePath);
+                _importedOptions = options;
                 ApplyOptionsToForm(options);
 
                 SelectedOptionsFileTextBlock.Text = $"Imported options: {selection.FilePath}";
@@ -154,14 +157,12 @@ namespace VistaSoftUI.Pages
                     RedirectStandardOutput = true,
                     UseShellExecute = false,
                     CreateNoWindow = true,
+                    Arguments = $"/d /s /c call \"{scriptPath}\"",
                 };
 
                 startInfo.Environment[OptionsContentEnvironmentVariable] =
                     Convert.ToBase64String(Encoding.UTF8.GetBytes(optionsContent));
-                startInfo.ArgumentList.Add("/d");
-                startInfo.ArgumentList.Add("/c");
-                startInfo.ArgumentList.Add(scriptPath);
-                startInfo.ArgumentList.Add(selectedIsoFile.FilePath);
+                startInfo.Environment[IsoPathEnvironmentVariable] = selectedIsoFile.FilePath;
 
                 using Process? process = Process.Start(startInfo);
 
@@ -178,14 +179,23 @@ namespace VistaSoftUI.Pages
 
                 string output = await outputTask;
                 string error = await errorTask;
+                string? logPath = await InstallWorkflowDiagnostics.TryWriteLogAsync(
+                    selectedIsoFile.FilePath,
+                    process.ExitCode,
+                    output,
+                    error);
 
                 if (process.ExitCode != 0)
                 {
-                    InstallStatusTextBlock.Text = $"Install workflow failed. Exit code: {process.ExitCode}{Environment.NewLine}{output.Trim()}{Environment.NewLine}{error.Trim()}";
+                    InstallStatusTextBlock.Text = InstallWorkflowDiagnostics.CreateFailureMessage(
+                        process.ExitCode,
+                        output,
+                        error,
+                        logPath);
                     return;
                 }
 
-                InstallStatusTextBlock.Text = $"Install workflow completed successfully.{Environment.NewLine}{output.Trim()}";
+                InstallStatusTextBlock.Text = InstallWorkflowDiagnostics.CreateSuccessMessage(output, logPath);
             }
             catch (Exception ex)
             {
@@ -222,9 +232,10 @@ namespace VistaSoftUI.Pages
 
         private VistaSoftInstallOptions ReadOptionsFromForm()
         {
-            return new VistaSoftInstallOptions
+            VistaSoftInstallOptions options = new()
             {
-                AutoSetup = true,
+                UnattendedModeUi = _importedOptions.UnattendedModeUi,
+                AutoSetup = AutoSetupCheckBox.IsChecked == true,
                 ConnectMode = ConnectModeCheckBox.IsChecked == true,
                 OperationMode = GetSelectedOperationMode(),
                 PracticeName = PracticeNameTextBox.Text,
@@ -235,11 +246,23 @@ namespace VistaSoftUI.Pages
                 InstallSensorXPlugin = SensorXCheckBox.IsChecked == true,
                 InstallTwainPlugin = TwainCheckBox.IsChecked == true,
             };
+
+            foreach ((string key, string value) in _importedOptions.AdditionalOptions)
+            {
+                options.AdditionalOptions[key] = value;
+            }
+
+            return options;
         }
 
         private void ApplyOptionsToForm(VistaSoftInstallOptions options)
         {
             ArgumentNullException.ThrowIfNull(options);
+
+            if (options.AutoSetup.HasValue)
+            {
+                AutoSetupCheckBox.IsChecked = options.AutoSetup.Value;
+            }
 
             if (options.ConnectMode.HasValue)
             {
