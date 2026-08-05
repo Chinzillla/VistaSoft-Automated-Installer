@@ -33,9 +33,17 @@ namespace VistaSoftUI.Services
         {
             ArgumentNullException.ThrowIfNull(options);
 
-            IEnumerable<string> lines = CreateSupportedOptionValues(options)
+            (string Key, string Value, bool IsRequired)[] supportedOptions = CreateSupportedOptionValues(options);
+            HashSet<string> supportedKeys = supportedOptions
+                .Select(option => option.Key)
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            IEnumerable<string> lines = supportedOptions
                 .Where(option => option.IsRequired || !string.IsNullOrWhiteSpace(option.Value))
-                .Select(option => $"{option.Key}={option.Value}");
+                .Select(option => $"{option.Key}={option.Value}")
+                .Concat(options.AdditionalOptions
+                    .Where(option => !supportedKeys.Contains(option.Key))
+                    .Select(option => $"{option.Key.Trim()}={FlattenMultilineValue(option.Value)}"));
 
             return string.Join(Environment.NewLine, lines) + Environment.NewLine;
         }
@@ -99,6 +107,14 @@ namespace VistaSoftUI.Services
             {
                 options.InstallTwainPlugin = ParseBoolean(value);
             }
+            else if (StringEquals(key, OptionsFileKeys.UnattendedModeUi))
+            {
+                options.UnattendedModeUi = NormalizeUnattendedModeUi(value);
+            }
+            else if (!StringEquals(key, OptionsFileKeys.Mode))
+            {
+                options.AdditionalOptions[key] = value;
+            }
         }
 
         private static (string Key, string Value, bool IsRequired)[] CreateSupportedOptionValues(
@@ -107,7 +123,7 @@ namespace VistaSoftUI.Services
             return
             [
                 (OptionsFileKeys.Mode, OptionsFileValues.Unattended, true),
-                (OptionsFileKeys.UnattendedModeUi, OptionsFileValues.None, true),
+                (OptionsFileKeys.UnattendedModeUi, NormalizeUnattendedModeUi(options.UnattendedModeUi), true),
                 (OptionsFileKeys.AutoSetup, ToInstallerBoolean(options.AutoSetup ?? true), true),
                 (OptionsFileKeys.ConnectMode, ToInstallerBoolean(options.ConnectMode), true),
                 (OptionsFileKeys.OperationMode, VistaSoftOperationModes.NormalizeOrDefault(options.OperationMode), true),
@@ -180,6 +196,13 @@ namespace VistaSoftUI.Services
             return value == true ? "1" : "0";
         }
 
+        private static string NormalizeUnattendedModeUi(string? value)
+        {
+            return string.Equals(value?.Trim(), OptionsFileValues.Minimal, StringComparison.OrdinalIgnoreCase)
+                ? OptionsFileValues.Minimal
+                : OptionsFileValues.None;
+        }
+
         private static bool StringEquals(string left, string right)
         {
             return string.Equals(left, right, StringComparison.OrdinalIgnoreCase);
@@ -205,6 +228,7 @@ namespace VistaSoftUI.Services
         {
             public const string Unattended = "unattended";
             public const string None = "none";
+            public const string Minimal = "minimal";
         }
     }
 }
