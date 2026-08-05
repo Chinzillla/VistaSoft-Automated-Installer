@@ -12,8 +12,11 @@
     Scope="perMachine"
     Compressed="true">
 
-    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MajorUpgrade
+      AllowSameVersionUpgrades="yes"
+      DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <MediaTemplate EmbedCab="yes" />
+    <Property Id="ARPDISPLAYVERSION" Value="$(var.ProductDisplayVersion)" />
 
     <StandardDirectory Id="ProgramFiles64Folder">
       <Directory Id="INSTALLFOLDER" Name="$(var.ProductName)" />
@@ -24,14 +27,13 @@
     </StandardDirectory>
 
     <StandardDirectory Id="DesktopFolder">
-      <Component Id="DesktopShortcutComponent" Guid="fd66acd1-6dcd-42de-b278-49eb800a016a">
+      <Component Id="DesktopShortcutComponent" Guid="fd66acd1-6dcd-42de-b278-49eb800a016a" Bitness="always64">
         <Shortcut
           Id="ApplicationDesktopShortcut"
           Name="$(var.ProductName)"
           Description="Launch $(var.ProductName)"
           Target="[#VistaSoftExecutableFile]"
           WorkingDirectory="INSTALLFOLDER" />
-        <RemoveFolder Id="RemoveDesktopFolder" On="uninstall" />
         <RegistryValue
           Root="HKCU"
           Key="Software\VistaSoft Automation\VistaSoft Automated Installer"
@@ -58,7 +60,7 @@
       BinaryRef="Wix4UtilCA_$(sys.BUILDARCHSHORT)"
       DllEntry="WixUnelevatedShellExec"
       Execute="immediate"
-      Return="ignore" />
+      Return="check" />
     <InstallExecuteSequence>
       <Custom
         Action="LaunchApplication"
@@ -69,7 +71,7 @@
 
   <Fragment>
     <DirectoryRef Id="ApplicationProgramsFolder">
-      <Component Id="StartMenuShortcutComponent" Guid="0a9946f9-5c3a-4de6-b508-9c812884d09c">
+      <Component Id="StartMenuShortcutComponent" Guid="0a9946f9-5c3a-4de6-b508-9c812884d09c" Bitness="always64">
         <Shortcut
           Id="ApplicationStartMenuShortcut"
           Name="$(var.ProductName)"

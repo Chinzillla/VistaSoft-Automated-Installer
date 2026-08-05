@@ -56,6 +56,10 @@
                         X2="400"
                         Y1="0"
                         Y2="0" />
+                    <CheckBox
+                        x:Name="AutoSetupCheckBox"
+                        Content="Run initial setup automatically"
+                        IsChecked="True" />
                     <CheckBox x:Name="ConnectModeCheckBox" Content="VistaSoft Connect" />
                     <TextBlock Text="Installation Type" />
                     <TextBlock
