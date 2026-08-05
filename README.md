@@ -7,8 +7,10 @@ This program is meant to reduce installation time for a complete VistaSoft insta
 
 Currently only handles installation of vistasoft only, no pre or post installation configuration steps are added.
 
-#### Prerequisites for Development:
+#### Download
+- [Latest Version](https://drive.google.com/drive/folders/1tjfUEi0MWbsSNOpPHTx6kTrQ7HPCo1X6?usp=sharing)
 
+#### Prerequisites for Development:
 - Windows 11
 - [Windows App SDK 2.2.0](https://aka.ms/windowsappsdk/2.2/2.2.0/windowsappruntimeinstall-x64.exe)
 - [Visual Studio 2022](https://visualstudio.microsoft.com/vs/)
