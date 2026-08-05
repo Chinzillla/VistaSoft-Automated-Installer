@@ -1,8 +1,8 @@
 <Project Sdk="WixToolset.Sdk/6.0.2">
   <PropertyGroup>
     <InstallerPlatform>x64</InstallerPlatform>
-    <ProductVersion Condition="'$(ProductVersion)' == ''">0.0.2</ProductVersion>
-    <ProductDisplayVersion Condition="'$(ProductDisplayVersion)' == ''">0.0.1c</ProductDisplayVersion>
+    <ProductVersion Condition="'$(ProductVersion)' == ''">0.0.3</ProductVersion>
+    <ProductDisplayVersion Condition="'$(ProductDisplayVersion)' == ''">0.0.1</ProductDisplayVersion>
     <PublishDir Condition="'$(PublishDir)' == ''">$(MSBuildThisFileDirectory)..\artifacts\publish\win-x64</PublishDir>
     <DefineConstants>$(DefineConstants);ProductVersion=$(ProductVersion);PublishDir=$(PublishDir)</DefineConstants>
     <SuppressIces>ICE03;ICE69</SuppressIces>

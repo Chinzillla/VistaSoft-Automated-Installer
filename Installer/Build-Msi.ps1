@@ -1,10 +1,10 @@
 [CmdletBinding()]
 param(
     [ValidatePattern('^\d+\.\d+\.\d+$')]
-    [string]$ProductVersion = "0.0.2",
+    [string]$ProductVersion = "0.0.3",
 
     [ValidatePattern('^[0-9A-Za-z][0-9A-Za-z._-]*$')]
-    [string]$DisplayVersion = "0.0.1c",
+    [string]$DisplayVersion = "0.0.1",
 
     [ValidateSet("Debug", "Release")]
     [string]$Configuration = "Release",

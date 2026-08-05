@@ -17,6 +17,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
@@ -37,13 +38,14 @@
                     x:Name="ExportOptionsButton"
                     Click="ExportOptionsButton_Click"
                     Content="Export Options" />
-                <TextBlock
-                    x:Name="SelectedOptionsFileTextBlock"
-                    Text="No options file selected."
-                    TextWrapping="Wrap" />
             </StackPanel>
-            <ScrollViewer
+            <TextBlock
+                x:Name="SelectedOptionsFileTextBlock"
                 Grid.Row="2"
+                Text="No options file selected."
+                TextWrapping="Wrap" />
+            <ScrollViewer
+                Grid.Row="3"
                 HorizontalScrollBarVisibility="Disabled"
                 VerticalScrollBarVisibility="Auto">
                 <StackPanel Margin="0,0,16,0" Spacing="16">
@@ -132,18 +134,12 @@
                 Text="Install VistaSoft" />
 
             <StackPanel Grid.Row="1" Spacing="12">
-                <Button
-                    x:Name="OpenVistaSoftIsoButton"
-                    Click="OpenVistaSoftIsoButton_Click"
-                    Content="Open VistaSoft iso" />
+                <Button x:Name="OpenVistaSoftIsoButton" Click="OpenVistaSoftIsoButton_Click" Content="Open VistaSoft iso" />
                 <TextBlock
                     x:Name="SelectedVistaSoftFileTextBlock"
                     Text="No ISO file selected"
                     TextWrapping="Wrap" />
-                <Button
-                    x:Name="InstallButton"
-                    Click="InstallButton_Click"
-                    Content="Install" />
+                <Button x:Name="InstallButton" Click="InstallButton_Click" Content="Install" />
                 <TextBlock x:Name="InstallStatusTextBlock" TextWrapping="Wrap" />
             </StackPanel>
         </Grid>
